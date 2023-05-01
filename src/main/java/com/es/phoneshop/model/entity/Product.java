@@ -1,15 +1,18 @@
-package com.es.phoneshop.model.product.entity;
+package com.es.phoneshop.model.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.Currency;
+import java.util.UUID;
 
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode
 public class Product {
 
     private Long id;
@@ -28,6 +31,7 @@ public class Product {
     private Boolean isChosen = false;
 
     public Product(String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
+        this.id = (long) UUID.randomUUID().hashCode();
         this.code = code;
         this.description = description;
         this.price = price;

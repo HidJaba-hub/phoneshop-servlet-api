@@ -1,40 +1,69 @@
-package com.es.phoneshop.model.product.DAO;
+package com.es.phoneshop.DAO;
 
-import com.es.phoneshop.model.product.entity.Product;
+import com.es.phoneshop.StringChecker;
+import com.es.phoneshop.model.entity.Product;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
-public class ArrayListProductDao implements ProductDao {
-    private final ReadWriteLock lock = new ReentrantReadWriteLock();
-    private final Lock readLock = lock.readLock();
-    private final Lock writeLock = lock.writeLock();
+public class CustomProductDao implements ProductDao {
+    private static final ReadWriteLock lock = new ReentrantReadWriteLock();//is it a good variant to make locks static?
+    private static final Lock readLock = lock.readLock();
+    private static final Lock writeLock = lock.writeLock();
+    private static volatile CustomProductDao customProductDao;
     private List<Product> products;
 
-    public ArrayListProductDao() {
+    private CustomProductDao() {
         products = new ArrayList<>();
         saveSampleProducts();
     }
 
+    public static CustomProductDao getCustomProductDao() {
+        CustomProductDao localInstance = customProductDao;
+        if (localInstance == null) {
+            writeLock.lock();
+            try {
+                localInstance = customProductDao;
+                if (localInstance == null) {
+                    customProductDao = localInstance = new CustomProductDao();
+                }
+            } finally {
+                writeLock.unlock();
+            }
+        }
+        return localInstance;
+    }
+
     @Override
-    public Product getProduct(Long id) {
-        readLock.lock();//Не уверена что на чтении нужен лок, но для большей безопасности пускай будет
+    public Optional<Product> getProductById(Long id) {
+        readLock.lock();
         try {
             return products.stream()
                     .filter(product -> id.equals(product.getId()))
-                    .findAny()
-                    .orElseThrow(NoSuchElementException::new);
+                    .findAny();
         } finally {
             readLock.unlock();
         }
 
+    }
+
+    @Override
+    public List<Product> getProductByDescription(String description) {
+        readLock.lock();
+        try {
+            return products.stream()
+                    .filter(product -> StringChecker.containsWords(description, product.getDescription()))
+                    .collect(Collectors.toList());
+        } finally {
+            readLock.unlock();
+        }
     }
 
     @Override
@@ -43,6 +72,7 @@ public class ArrayListProductDao implements ProductDao {
         try {
             return products.stream()
                     .filter(product -> product.getPrice() != null)
+                    .filter(product -> product.getPrice().compareTo(BigDecimal.valueOf(0)) > 0)
                     .filter(product -> product.getStock() > 0)
                     .collect(Collectors.toList());
         } finally {
@@ -52,19 +82,20 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
-    public Product save(Product product) {
+    public void save(Product product) throws NullPointerException {
         writeLock.lock();
         try {
-            if (product.getId() != null) {
-                products.set((int) (product.getId()-1), product);
+            if (product == null)
+                throw new NullPointerException();
+            Optional<Product> oldProduct = getProductById(product.getId());
+            if (oldProduct.isPresent()) {
+                products.set(products.indexOf(oldProduct.get()), product);
             } else {
-                product.setId((long) products.size() + 1);
                 products.add(product);
             }
         } finally {
             writeLock.unlock();
         }
-        return product;
     }
 
     @Override
@@ -77,6 +108,14 @@ public class ArrayListProductDao implements ProductDao {
         } finally {
             writeLock.unlock();
         }
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void changeChosenState(Product product, boolean state) {
+        product.setIsChosen(state);
     }
 
     private void saveSampleProducts() {

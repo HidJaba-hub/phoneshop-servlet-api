@@ -14,7 +14,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.io.IOException;
 
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProductListPageServletTest {
@@ -41,24 +42,27 @@ public class ProductListPageServletTest {
         verify(requestDispatcher).forward(request, response);
         verify(request).setAttribute(eq("products"), any());
     }
+
     @Test
     public void testDoPostGetProduct() throws ServletException, IOException {
         when(request.getParameter("action")).thenReturn("findProduct");
-        when(request.getParameter("phoneId")).thenReturn("-1");
+        when(request.getParameter("phoneDescription")).thenReturn("-1");
         servlet.doPost(request, response);
 
         verify(requestDispatcher).forward(request, response);
         verify(request).setAttribute(eq("products"), any());
     }
+
     @Test
     public void testDoPostDelete() throws ServletException, IOException {
         when(request.getParameter("action")).thenReturn("deleteProducts");
-        when(request.getParameter("phoneIdToDelete")).thenReturn("-1");
+        when(request.getParameter("phoneIdToBuy")).thenReturn("-1");
         servlet.doPost(request, response);
 
         verify(requestDispatcher).forward(request, response);
         verify(request).setAttribute(eq("products"), any());
     }
+
     @Test
     public void testDoPostFindNotNullProducts() throws ServletException, IOException {
         when(request.getParameter("action")).thenReturn("findNotNullProducts");

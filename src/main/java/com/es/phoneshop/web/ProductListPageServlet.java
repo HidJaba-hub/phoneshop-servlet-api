@@ -1,7 +1,7 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.model.product.DAO.ArrayListProductDao;
-import com.es.phoneshop.model.product.DAO.ProductDao;
+import com.es.phoneshop.service.CustomProductService;
+import com.es.phoneshop.service.ProductService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -9,49 +9,47 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ProductListPageServlet extends HttpServlet {
-    public ProductDao productDao;
+    public ProductService productService;
+    private String phoneIdToBuy;
+    private String phoneDescription;
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
-        productDao = new ArrayListProductDao();
+        productService = CustomProductService.getCustomProductService();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("products", productDao.findProducts());
+        request.setAttribute("products", productService.getProductsNotNull());
+        productService.getProductsNotNull().forEach(product -> productService.changeState(product, false));
         request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-        productDao.findProducts().forEach(product -> product.setIsChosen(false));
+        productService.getProductsNotNull().forEach(product -> productService.changeState(product, false));
         switch (action) {
             case ("findProduct"):
-                if (request.getParameter("phoneId") != null && !Objects.equals(request.getParameter("phoneId"), "")) {
-                    try {
-                        productDao.getProduct(Long.valueOf(request.getParameter("phoneId"))).setIsChosen(true);
-                    } catch (NoSuchElementException exception) {
-                        exception.printStackTrace();
-                    }
+                phoneDescription = request.getParameter("phoneDescription");
+                if (phoneDescription != null && !phoneDescription.isEmpty()) {
+                    productService.getProductByDescription(phoneDescription).forEach(product -> productService.changeState(product, true));
                 }
                 break;
             case ("deleteProducts"):
-                if (request.getParameter("phoneIdToDelete") != null && !Objects.equals(request.getParameter("phoneIdToDelete"), "")) {
-                    productDao.delete(Long.valueOf(request.getParameter("phoneIdToDelete")));
+                phoneIdToBuy = request.getParameter("phoneIdToBuy");
+                if (phoneIdToBuy != null && !phoneIdToBuy.isEmpty()) {
+                    productService.buyProduct(Long.valueOf(phoneIdToBuy));
                 }
                 break;
             case ("findNotNullProducts"):
-                productDao.findProducts().forEach(product -> product.setIsChosen(true));
+                productService.getProductsNotNull().forEach(product -> productService.changeState(product, true));
                 break;
         }
-
-        request.setAttribute("products", productDao.findProducts());
+        request.setAttribute("products", productService.getProductsNotNull());
         request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
     }
 }
