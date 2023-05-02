@@ -8,11 +8,11 @@ import java.util.Optional;
 public interface ProductDao {
     Optional<Product> getProductById(Long id);
 
-    List<Product> getProductByDescription(String criteria);
-
     List<Product> findProducts();
 
     void save(Product product);
 
     void delete(Long id);
+
+    void changeChosenState(Product product, boolean state);
 }

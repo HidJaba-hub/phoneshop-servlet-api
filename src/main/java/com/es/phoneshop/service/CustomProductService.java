@@ -2,19 +2,13 @@ package com.es.phoneshop.service;
 
 import com.es.phoneshop.DAO.CustomProductDao;
 import com.es.phoneshop.DAO.ProductDao;
-import com.es.phoneshop.exception.ProductException;
+import com.es.phoneshop.exception.ProductDefinitionException;
 import com.es.phoneshop.model.entity.Product;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class CustomProductService implements ProductService {
-    private static final ReadWriteLock lock = new ReentrantReadWriteLock();
-    private static final Lock writeLock = lock.writeLock();
     private static CustomProductService customProductService;
     private final ProductDao productDao;
 
@@ -22,14 +16,9 @@ public class CustomProductService implements ProductService {
         productDao = CustomProductDao.getInstance();
     }
 
-    public static CustomProductService getInstance() {
+    public static synchronized CustomProductService getInstance() {
         if (customProductService == null) {
-            writeLock.lock();
-            try {
-                customProductService = new CustomProductService();
-            } finally {
-                writeLock.unlock();
-            }
+            customProductService = new CustomProductService();
         }
         return customProductService;
     }
@@ -50,7 +39,7 @@ public class CustomProductService implements ProductService {
         if (optionalProduct.isPresent()) {
             return optionalProduct.get();
         } else {
-            throw new NoSuchElementException("Product not found for id: " + id);
+            throw new ProductDefinitionException("Product not found for id: " + id);
         }
     }
 
@@ -58,14 +47,9 @@ public class CustomProductService implements ProductService {
     public void saveProduct(Product product) {
         try {
             productDao.save(product);
-        } catch (ProductException exception) {
+        } catch (ProductDefinitionException exception) {
             exception.printStackTrace();
         }
-    }
-
-    @Override
-    public List<Product> getProductByDescription(String description) {
-        return productDao.getProductByDescription(description);
     }
 
     @Override

@@ -44,33 +44,4 @@ public class ProductListPageServletTest {
         verify(requestDispatcher).forward(request, response);
         verify(request).setAttribute(eq("products"), any());
     }
-
-    @Test
-    public void testDoPostGetProduct() throws ServletException, IOException {
-        when(request.getParameter("action")).thenReturn("findProduct");
-        when(request.getParameter("phoneDescription")).thenReturn("-1");
-        servlet.doPost(request, response);
-
-        verify(requestDispatcher).forward(request, response);
-        verify(request).setAttribute(eq("products"), any());
-    }
-
-    @Test
-    public void testDoPostDelete() throws ServletException, IOException {
-        when(request.getParameter("action")).thenReturn("deleteProducts");
-        when(request.getParameter("phoneIdToBuy")).thenReturn("-1");
-        servlet.doPost(request, response);
-
-        verify(requestDispatcher).forward(request, response);
-        verify(request).setAttribute(eq("products"), any());
-    }
-
-    @Test
-    public void testDoPostFindNotNullProducts() throws ServletException, IOException {
-        when(request.getParameter("action")).thenReturn("findNotNullProducts");
-        servlet.doPost(request, response);
-
-        verify(requestDispatcher).forward(request, response);
-        verify(request).setAttribute(eq("products"), any());
-    }
 }

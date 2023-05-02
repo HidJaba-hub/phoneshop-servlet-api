@@ -8,10 +8,6 @@
   <p>
     Welcome to Expert-Soft training!
   </p>
-  <form action="products" method="POST">
-      <p>Найти товары по названию: <input type="text" placeholder="Название товара" name="phoneDescription"></p>
-      <button type="submit" value="findProduct" name="action">Найти товары</button>
-  </form>
   <table>
     <thead>
       <tr>
@@ -21,8 +17,7 @@
       </tr>
     </thead>
     <c:forEach var="product" items="${products}">
-      <c:if test="${product.isChosen==true}"><tr style="background-color: aqua"></c:if>
-      <c:if test="${product.isChosen==false}"><tr></c:if>
+      <tr>
         <td>
           <img class="product-tile" src="${product.imageUrl}">
         </td>

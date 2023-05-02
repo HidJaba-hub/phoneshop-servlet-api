@@ -1,29 +1,26 @@
 package com.es.phoneshop.DAO;
 
-import com.es.phoneshop.exception.ProductException;
+import com.es.phoneshop.exception.ProductDefinitionException;
 import com.es.phoneshop.model.entity.Product;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.List;
-import java.util.NoSuchElementException;
 
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ArrayListProductDaoTest {
+public class CustomProductDaoTest {
     private final Currency usd = Currency.getInstance("USD");
     private ProductDao productDao;
-    @Mock
-    private ProductDao productDaoMock;
     private Product product;
     private List<Product> productList;
 
@@ -34,12 +31,7 @@ public class ArrayListProductDaoTest {
         product = new Product("test", "test", new BigDecimal(100), usd, 10, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
 
         productList = CustomProductDao.getInstance().getProducts();
-        doAnswer(invocation -> {//mocking save
-            Product productToSave = invocation.getArgument(0);
-            productList.add(productToSave);
-            return null;
-        }).when(productDaoMock).save(any(Product.class));
-        productDaoMock.save(product);
+        productList.add(product);//as it's a reference we can add products this way to productDao, i suppose, without using save() and other method from test object
     }
 
     @After
@@ -69,18 +61,10 @@ public class ArrayListProductDaoTest {
 
     @Test
     public void givenProduct_whenDeleteProduct_thenGetProduct() {
-        List<Product> productsBeforeDel = CustomProductDao.getInstance().getProducts();
         productDao.delete(product.getId());
-        List<Product> productsAfterDel = CustomProductDao.getInstance().getProducts();
+        List<Product> products = productDao.findProducts();
 
-        assertNotEquals(productsBeforeDel, productsAfterDel);
-        assertTrue(productsBeforeDel.contains(product));
-        assertFalse(productsAfterDel.contains(product));
-    }
-
-    @Test(expected = NoSuchElementException.class)
-    public void givenId_whenGetProductByID_thenGetException() {
-        productDao.getProductById(-1L).get();
+        assertFalse(products.contains(product));
     }
 
     @Test
@@ -88,18 +72,10 @@ public class ArrayListProductDaoTest {
         Product expectedProduct = productDao.getProductById(product.getId()).get();
 
         assertNotNull(expectedProduct);
-        assertEquals(product, expectedProduct);
+        assertEquals(expectedProduct, product);
     }
 
-    @Test
-    public void givenProduct_whenGetProductByDescription_thenGetProduct() {
-        Product expectedProduct = productDao.getProductByDescription(product.getDescription()).get(0);
-
-        assertNotNull(expectedProduct);
-        assertEquals(product, expectedProduct);
-    }
-
-    @Test(expected = ProductException.class)
+    @Test(expected = ProductDefinitionException.class)
     public void givenNullProduct_whenSaving_thenGetException() {
         productDao.save(null);
     }
@@ -116,7 +92,7 @@ public class ArrayListProductDaoTest {
 
     @Test
     public void givenProduct_whenChangingState_thenGetState() {
-        CustomProductDao.getInstance().changeChosenState(product, true);
+        productDao.changeChosenState(product, true);
         assertNotNull(product.getIsChosen());
         assertTrue(product.getIsChosen());
     }
