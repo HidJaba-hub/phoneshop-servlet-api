@@ -31,7 +31,7 @@ public class Product {
     private Boolean isChosen = false;
 
     public Product(String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
-        this.id = (long) UUID.randomUUID().hashCode();
+        this.id = UUID.randomUUID().getMostSignificantBits();
         this.code = code;
         this.description = description;
         this.price = price;

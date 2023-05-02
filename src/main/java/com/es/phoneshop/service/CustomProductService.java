@@ -2,6 +2,7 @@ package com.es.phoneshop.service;
 
 import com.es.phoneshop.DAO.CustomProductDao;
 import com.es.phoneshop.DAO.ProductDao;
+import com.es.phoneshop.exception.ProductException;
 import com.es.phoneshop.model.entity.Product;
 
 import java.util.List;
@@ -14,68 +15,62 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class CustomProductService implements ProductService {
     private static final ReadWriteLock lock = new ReentrantReadWriteLock();
     private static final Lock writeLock = lock.writeLock();
-    //idk is it necessary to synchronize service, because there are read/write locks in dao and it will be locked for any operation
-    private static volatile CustomProductService customProductService;
+    private static CustomProductService customProductService;
     private final ProductDao productDao;
 
     private CustomProductService() {
-        productDao = CustomProductDao.getCustomProductDao();
+        productDao = CustomProductDao.getInstance();
     }
 
-    public static CustomProductService getCustomProductService() {
-        CustomProductService localInstance = customProductService;
-        if (localInstance == null) {
+    public static CustomProductService getInstance() {
+        if (customProductService == null) {
             writeLock.lock();
             try {
-                localInstance = customProductService;
-                if (localInstance == null) {
-                    customProductService = localInstance = new CustomProductService();
-                }
+                customProductService = new CustomProductService();
             } finally {
                 writeLock.unlock();
             }
         }
-        return localInstance;
+        return customProductService;
     }
 
     @Override
-    public List<Product> getProductsNotNull() {
-        List<Product> products;
-        products = productDao.findProducts();
-        return products;
+    public List<Product> getProducts() {
+        return productDao.findProducts();
     }
 
     @Override
-    public void buyProduct(Long id) {
+    public void deleteProduct(Long id) {
         productDao.delete(id);
     }
 
     @Override
     public Product getProductById(Long id) {
-        Product product = null;
+        Optional<Product> optionalProduct = productDao.getProductById(id);
+        if (optionalProduct.isPresent()) {
+            return optionalProduct.get();
+        } else {
+            throw new NoSuchElementException("Product not found for id: " + id);
+        }
+    }
+
+    @Override
+    public void saveProduct(Product product) {
         try {
-            Optional<Product> optionalProduct = productDao.getProductById(id);
-            if (optionalProduct.isPresent()) {
-                product = optionalProduct.get();
-            }
-        } catch (NoSuchElementException exception) {
+            productDao.save(product);
+        } catch (ProductException exception) {
             exception.printStackTrace();
         }
-        return product;
     }
 
     @Override
     public List<Product> getProductByDescription(String description) {
-        List<Product> products;
-
-        products = productDao.getProductByDescription(description);
-
-        return products;
+        return productDao.getProductByDescription(description);
     }
 
     @Override
     public void changeState(Product product, boolean state) {
-        CustomProductDao.getCustomProductDao().changeChosenState(product, state);
+        CustomProductDao.getInstance().changeChosenState(product, state);
     }
 
 }

@@ -9,9 +9,11 @@ public interface ProductService {
 
     List<Product> getProductByDescription(String description);
 
-    List<Product> getProductsNotNull();
+    List<Product> getProducts();
 
-    void buyProduct(Long id);
+    void deleteProduct(Long id);
 
     void changeState(Product product, boolean state);
+
+    void saveProduct(Product product);
 }

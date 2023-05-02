@@ -9,15 +9,8 @@
     Welcome to Expert-Soft training!
   </p>
   <form action="products" method="POST">
-
       <p>Найти товары по названию: <input type="text" placeholder="Название товара" name="phoneDescription"></p>
       <button type="submit" value="findProduct" name="action">Найти товары</button>
-
-      <p>Купить товар по номеру: <input type="text" placeholder="ID позиции" name="phoneIdToBuy"></p>
-      <button type="submit" value="deleteProducts" name="action">Купить товар</button>
-
-      <button type="submit" value="findNotNullProducts" name="action">Выделить все товары</button>
-
   </form>
   <table>
     <thead>

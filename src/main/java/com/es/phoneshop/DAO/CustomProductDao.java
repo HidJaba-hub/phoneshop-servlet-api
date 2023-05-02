@@ -1,6 +1,7 @@
 package com.es.phoneshop.DAO;
 
 import com.es.phoneshop.StringChecker;
+import com.es.phoneshop.exception.ProductException;
 import com.es.phoneshop.model.entity.Product;
 
 import java.math.BigDecimal;
@@ -14,10 +15,10 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
 public class CustomProductDao implements ProductDao {
-    private static final ReadWriteLock lock = new ReentrantReadWriteLock();//is it a good variant to make locks static?
+    private static final ReadWriteLock lock = new ReentrantReadWriteLock();
     private static final Lock readLock = lock.readLock();
     private static final Lock writeLock = lock.writeLock();
-    private static volatile CustomProductDao customProductDao;
+    private static CustomProductDao customProductDao;
     private List<Product> products;
 
     private CustomProductDao() {
@@ -25,20 +26,16 @@ public class CustomProductDao implements ProductDao {
         saveSampleProducts();
     }
 
-    public static CustomProductDao getCustomProductDao() {
-        CustomProductDao localInstance = customProductDao;
-        if (localInstance == null) {
+    public static CustomProductDao getInstance() {
+        if (customProductDao == null) {
             writeLock.lock();
             try {
-                localInstance = customProductDao;
-                if (localInstance == null) {
-                    customProductDao = localInstance = new CustomProductDao();
-                }
+                customProductDao = new CustomProductDao();
             } finally {
                 writeLock.unlock();
             }
         }
-        return localInstance;
+        return customProductDao;
     }
 
     @Override
@@ -59,7 +56,7 @@ public class CustomProductDao implements ProductDao {
         readLock.lock();
         try {
             return products.stream()
-                    .filter(product -> StringChecker.containsWords(description, product.getDescription()))
+                    .filter(product -> new StringChecker().test(description, product.getDescription()))//maybe it can be written more compressed?
                     .collect(Collectors.toList());
         } finally {
             readLock.unlock();
@@ -82,11 +79,11 @@ public class CustomProductDao implements ProductDao {
     }
 
     @Override
-    public void save(Product product) throws NullPointerException {
+    public void save(Product product) throws ProductException {
         writeLock.lock();
         try {
             if (product == null)
-                throw new NullPointerException();
+                throw new ProductException("Product has no data");
             Optional<Product> oldProduct = getProductById(product.getId());
             if (oldProduct.isPresent()) {
                 products.set(products.indexOf(oldProduct.get()), product);
