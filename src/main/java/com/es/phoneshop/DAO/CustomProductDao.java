@@ -62,16 +62,18 @@ public class CustomProductDao implements ProductDao {
 
     @Override
     public void save(Product product) throws ProductDefinitionException {
+        if (product == null)
+            throw new ProductDefinitionException("Product has no data");
         writeLock.lock();
         try {
-            if (product == null)
-                throw new ProductDefinitionException("Product has no data");
-            Optional<Product> oldProduct = getProductById(product.getId());
-            if (oldProduct.isPresent()) {
-                products.set(products.indexOf(oldProduct.get()), product);
-            } else {
-                products.add(product);
-            }
+            products.stream()
+                    .filter(oldProduct -> oldProduct.getId().equals(product.getId()))
+                    .findAny()
+                    .map(oldProduct -> products.set(products.indexOf(oldProduct), product))
+                    .orElseGet(()->{
+                        products.add(product);
+                        return null;
+                    });
         } finally {
             writeLock.unlock();
         }
@@ -88,7 +90,11 @@ public class CustomProductDao implements ProductDao {
             writeLock.unlock();
         }
     }
-
+    @Override
+    public void setProducts(List<Product> products){
+        this.products=products;
+    }
+    @Override
     public List<Product> getProducts() {
         return products;
     }

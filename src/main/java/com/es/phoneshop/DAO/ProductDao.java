@@ -15,4 +15,6 @@ public interface ProductDao {
     void delete(Long id);
 
     void changeChosenState(Product product, boolean state);
+    void setProducts(List<Product> products);
+    List<Product> getProducts();
 }

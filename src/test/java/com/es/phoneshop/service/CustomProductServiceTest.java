@@ -1,72 +1,52 @@
 package com.es.phoneshop.service;
 
-import com.es.phoneshop.DAO.CustomProductDao;
+import com.es.phoneshop.DAO.ProductDao;
 import com.es.phoneshop.exception.ProductDefinitionException;
 import com.es.phoneshop.model.entity.Product;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
-import java.math.BigDecimal;
-import java.util.Currency;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
 public class CustomProductServiceTest {
-    private final Currency usd = Currency.getInstance("USD");
-    private ProductService productService;
-    private Product product;
-    private List<Product> productList;
+    @Mock
+    private ProductDao productDao;
+    @InjectMocks
+    private CustomProductService productService;
 
     @Before
     public void setup() {
         productService = CustomProductService.getInstance();
-
-        product = new Product("test", "test", new BigDecimal(100), usd, 10, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
-
-        productList = CustomProductDao.getInstance().getProducts();
-        productList.add(product);
-    }
-
-    @After
-    public void release() {
-        productList.remove(product);
-        CustomProductDao.getInstance().delete(product.getId());
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void givenProductWithZeroStock_whenFindProducts_thenGetProducts() {
-        product.setStock(0);
+    public void givenListWithProduct_whenFindProducts_thenGetProducts() {
+        List<Product> expectedList = new ArrayList<>();
+        expectedList.add(new Product());
+        when(productDao.findProducts()).thenReturn(expectedList);
 
         List<Product> products = productService.getProducts();
 
-        assertFalse(products.isEmpty());
-        assertFalse(products.contains(product));
+        assertEquals(expectedList, products);
     }
 
     @Test
-    public void givenProductWithNullPrice_whenFindProducts_thenGetProducts() {
-        product.setPrice(null);
+    public void givenId_whenDeleteProduct_thenVerify() {
+        productService.deleteProduct(1L);
 
-        List<Product> products = productService.getProducts();
-
-        assertFalse(products.isEmpty());
-        assertFalse(products.contains(product));
-    }
-
-    @Test
-    public void givenProduct_whenDeleteProduct_thenGetProduct() {
-        productService.deleteProduct(product.getId());
-        List<Product> products = productService.getProducts();
-
-        assertFalse(products.contains(product));
+        verify(productDao).delete(1L);
     }
 
     @Test(expected = ProductDefinitionException.class)
@@ -76,24 +56,29 @@ public class CustomProductServiceTest {
 
     @Test
     public void givenProduct_whenGetProductById_thenGetProduct() {
+        Product product = new Product();
+        when(productDao.getProductById(product.getId())).thenReturn(Optional.of(product));
+
         Product expectedProduct = productService.getProductById(product.getId());
 
-        assertNotNull(expectedProduct);
         assertEquals(expectedProduct, product);
     }
 
     @Test
     public void givenProduct_whenSaving_thenGetProduct() {
-        Product productToSave = new Product("savetest", "savetest", new BigDecimal(100), usd, 10, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
+        Product productToSave = new Product();
+
         productService.saveProduct(productToSave);
 
-        assertNotNull(productToSave.getId());
-        assertTrue(productService.getProducts().contains(productToSave));
+        verify(productDao).save(productToSave);
     }
 
     @Test
     public void givenProduct_whenChangingState_thenGetState() {
+        Product product = new Product();
+
         productService.changeState(product, true);
+
         assertNotNull(product.getIsChosen());
         assertTrue(product.getIsChosen());
     }

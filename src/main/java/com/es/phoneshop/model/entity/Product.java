@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.UUID;
 
-@NoArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode
@@ -29,6 +28,9 @@ public class Product {
     private int stock;
     private String imageUrl;
     private Boolean isChosen = false;
+    public Product(){
+        this.id=UUID.randomUUID().getMostSignificantBits();
+    }
 
     public Product(String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
         this.id = UUID.randomUUID().getMostSignificantBits();
