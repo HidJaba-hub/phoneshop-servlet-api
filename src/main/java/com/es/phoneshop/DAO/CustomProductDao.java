@@ -66,14 +66,12 @@ public class CustomProductDao implements ProductDao {
             throw new ProductDefinitionException("Product has no data");
         writeLock.lock();
         try {
-            products.stream()
-                    .filter(oldProduct -> oldProduct.getId().equals(product.getId()))
-                    .findAny()
-                    .map(oldProduct -> products.set(products.indexOf(oldProduct), product))
-                    .orElseGet(()->{
-                        products.add(product);
-                        return null;
-                    });
+            Optional<Product> oldProduct = getProductById(product.getId());
+            if (oldProduct.isPresent()) {
+                products.set(products.indexOf(oldProduct.get()), product);
+            } else {
+                products.add(product);
+            };
         } finally {
             writeLock.unlock();
         }
