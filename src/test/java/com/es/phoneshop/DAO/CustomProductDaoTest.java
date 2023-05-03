@@ -36,12 +36,12 @@ public class CustomProductDaoTest {
 
     public void initializeMocks() {
         List<Product> mockedProducts = Arrays.asList(mockedProduct, anotherMockedProduct);
-        mockedProducts//set mocked values for both mockedProduct and anotherMockedProduct
+        mockedProducts
                 .forEach(product -> {
                     when(product.getStock()).thenReturn(10);
                     when(product.getPrice()).thenReturn(new BigDecimal("10.0"));
-                });//i set only values that i need for checking. am i need to set all the values?
-        productDao.setProducts(mockedProducts);//set new list with mocked products
+                });
+        productDao.setProducts(mockedProducts);
     }
 
     @Test

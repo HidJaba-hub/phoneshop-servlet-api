@@ -45,12 +45,12 @@ public class CustomProductService implements ProductService {
 
     @Override
     public void saveProduct(Product product) {
-        productDao.save(product);
+            productDao.save(product);
     }
 
     @Override
     public void changeState(Product product, boolean state) {
-        CustomProductDao.getInstance().changeChosenState(product, state);
+        productDao.changeChosenState(product, state);
     }
 
 }
