@@ -1,5 +1,7 @@
 package com.es.phoneshop.DAO;
 
+import com.es.phoneshop.SortField;
+import com.es.phoneshop.SortOrder;
 import com.es.phoneshop.exception.ProductDefinitionException;
 import com.es.phoneshop.model.entity.Product;
 import org.junit.Before;
@@ -48,7 +50,7 @@ public class CustomProductDaoTest {
     public void givenProductWithZeroStock_whenFindProducts_thenGetProducts() {
         when(mockedProduct.getStock()).thenReturn(0);
 
-        List<Product> products = productDao.findProducts();
+        List<Product> products = productDao.findProducts(SortField.DESCRIPTION, SortOrder.DESC, "");
 
         assertFalse(products.isEmpty());
         assertFalse(products.contains(mockedProduct));
@@ -58,7 +60,7 @@ public class CustomProductDaoTest {
     public void givenProductWithNullPrice_whenFindProducts_thenGetProducts() {
         when(mockedProduct.getPrice()).thenReturn(null);
 
-        List<Product> products = productDao.findProducts();
+        List<Product> products = productDao.findProducts(SortField.DESCRIPTION, SortOrder.DESC, "");
 
         assertFalse(products.isEmpty());
         assertFalse(products.contains(mockedProduct));
@@ -67,7 +69,7 @@ public class CustomProductDaoTest {
     @Test
     public void givenProduct_whenDeleteProduct_thenGetProduct() {
         productDao.delete(mockedProduct.getId());
-        List<Product> products = productDao.findProducts();
+        List<Product> products = productDao.findProducts(SortField.DESCRIPTION, SortOrder.DESC, "");
 
         assertFalse(products.contains(mockedProduct));
     }

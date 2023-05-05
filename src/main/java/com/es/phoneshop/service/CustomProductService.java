@@ -2,6 +2,8 @@ package com.es.phoneshop.service;
 
 import com.es.phoneshop.DAO.CustomProductDao;
 import com.es.phoneshop.DAO.ProductDao;
+import com.es.phoneshop.SortField;
+import com.es.phoneshop.SortOrder;
 import com.es.phoneshop.exception.ProductDefinitionException;
 import com.es.phoneshop.model.entity.Product;
 
@@ -16,16 +18,18 @@ public class CustomProductService implements ProductService {
         productDao = CustomProductDao.getInstance();
     }
 
-    public static synchronized CustomProductService getInstance() {
+    public static CustomProductService getInstance() {
         if (customProductService == null) {
-            customProductService = new CustomProductService();
+            synchronized (CustomProductService.class) {
+                customProductService = new CustomProductService();
+            }
         }
         return customProductService;
     }
 
     @Override
-    public List<Product> getProducts() {
-        return productDao.findProducts();
+    public List<Product> getProducts(SortField sortField, SortOrder sortOrder, String query) {
+        return productDao.findProducts(sortField, sortOrder, query);
     }
 
     @Override
@@ -39,7 +43,7 @@ public class CustomProductService implements ProductService {
         if (optionalProduct.isPresent()) {
             return optionalProduct.get();
         } else {
-            throw new ProductDefinitionException("Product not found for id: " + id);
+            throw new ProductDefinitionException(id,"Product not found for id: " + id);
         }
     }
 

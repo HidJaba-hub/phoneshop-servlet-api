@@ -1,6 +1,8 @@
 package com.es.phoneshop.service;
 
 import com.es.phoneshop.DAO.ProductDao;
+import com.es.phoneshop.SortField;
+import com.es.phoneshop.SortOrder;
 import com.es.phoneshop.exception.ProductDefinitionException;
 import com.es.phoneshop.model.entity.Product;
 import org.junit.Before;
@@ -35,9 +37,9 @@ public class CustomProductServiceTest {
     public void givenListWithProduct_whenFindProducts_thenGetProducts() {
         List<Product> expectedList = new ArrayList<>();
         expectedList.add(new Product());
-        when(productDao.findProducts()).thenReturn(expectedList);
+        when(productDao.findProducts(SortField.DESCRIPTION, SortOrder.DESC, "")).thenReturn(expectedList);
 
-        List<Product> products = productService.getProducts();
+        List<Product> products = productService.getProducts(SortField.DESCRIPTION, SortOrder.DESC, "");
 
         assertEquals(expectedList, products);
     }

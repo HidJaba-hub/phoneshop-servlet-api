@@ -32,3 +32,45 @@ img.product-tile {
 body.product-list {
 
 }
+
+
+@keyframes transition {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.popup {
+  position: absolute;
+  width: fit-content;
+  height: fit-content;
+  left: -700px;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  border : none;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  padding: 30px;
+  transition: all;
+  animation-name: transition;
+  animation-duration: 0.5s;
+  animation-iteration-count: 1;
+}
+.popup table, .popup td {
+  border: none;
+}
+.popup th, .popup td {
+  text-align: center;
+}
