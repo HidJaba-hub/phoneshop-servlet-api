@@ -1,31 +1,36 @@
 header {
-  background-color: aquamarine;
-  font: 400 70px/1.3 'Lobster Two', Helvetica, sans-serif;
-  color: #2b2b2b;
-  text-shadow: 1px 1px 0px #ededed, 4px 4px 0px rgba(0,0,0,0.15);
+    background-color: aquamarine;
+    font: 400 70px/1.3 'Lobster Two', Helvetica, sans-serif;
+    color: #2b2b2b;
+    text-shadow: 1px 1px 0px #ededed, 4px 4px 0px rgba(0, 0, 0, 0.15);
 
 }
+
 header a:link {
-  text-decoration: none;
+    text-decoration: none;
 }
+
 header img {
-  max-width: 64px;
+    max-width: 64px;
 }
 
 table {
-  border-collapse: collapse;
-  border : 1px solid gray;
+    border-collapse: collapse;
+    border: 1px solid gray;
 }
+
 td {
-  padding: 10px;
-  border : 1px solid gray;
-  vertical-align: top;
+    padding: 10px;
+    border: 1px solid gray;
+    vertical-align: top;
 }
+
 .price {
-  text-align: right;
+    text-align: right;
 }
+
 img.product-tile {
-  max-width: 64px;
+    max-width: 64px;
 }
 
 /* Page specific styles */
@@ -35,42 +40,45 @@ body.product-list {
 
 
 @keyframes transition {
-  0% {
-    opacity: 0;
-  }
-  30% {
-    opacity: 0.3;
-  }
-  50% {
-    opacity: 0.5;
-  }
-  80% {
-    opacity: 0.8;
-  }
-  100% {
-    opacity: 1;
-  }
+    0% {
+        opacity: 0;
+    }
+    30% {
+        opacity: 0.3;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    80% {
+        opacity: 0.8;
+    }
+    100% {
+        opacity: 1;
+    }
 }
+
 .popup {
-  position: absolute;
-  width: fit-content;
-  height: fit-content;
-  left: -700px;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin: auto;
-  border : none;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-  padding: 30px;
-  transition: all;
-  animation-name: transition;
-  animation-duration: 0.5s;
-  animation-iteration-count: 1;
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    left: -700px;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    border: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    padding: 30px;
+    transition: all;
+    animation-name: transition;
+    animation-duration: 0.5s;
+    animation-iteration-count: 1;
 }
+
 .popup table, .popup td {
-  border: none;
+    border: none;
 }
+
 .popup th, .popup td {
-  text-align: center;
+    text-align: center;
 }

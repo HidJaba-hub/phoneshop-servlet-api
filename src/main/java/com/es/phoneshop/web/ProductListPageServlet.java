@@ -12,7 +12,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.maven.shared.utils.StringUtils;
 
 import java.io.IOException;
-import java.util.Optional;
 
 public class ProductListPageServlet extends HttpServlet {
     public ProductService productService;

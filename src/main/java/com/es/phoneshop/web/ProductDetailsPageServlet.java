@@ -18,6 +18,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
         super.init(config);
         productService = CustomProductService.getInstance();
     }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         long productId = Long.valueOf(request.getPathInfo().substring(1));

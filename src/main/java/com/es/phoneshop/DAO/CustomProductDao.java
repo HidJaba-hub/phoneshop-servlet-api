@@ -10,7 +10,6 @@ import org.apache.maven.shared.utils.StringUtils;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Currency;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
@@ -55,9 +54,9 @@ public class CustomProductDao implements ProductDao {
     public List<Product> findProducts(SortField sortField, SortOrder sortOrder, String query) {
         readLock.lock();
         try {
-            Comparator<Product> comparator= setComparator(sortField, sortOrder, query);
+            Comparator<Product> comparator = setComparator(sortField, sortOrder, query);
             return products.stream()
-                    .filter(product -> StringUtils.isEmpty(query)? true : StringChecker.calculateStringSimilarity(product.getDescription(), query)>0)
+                    .filter(product -> StringUtils.isEmpty(query) || StringChecker.calculateStringSimilarity(product.getDescription(), query) > 0)
                     .filter(product -> product.getPrice() != null)
                     .filter(product -> product.getPrice().compareTo(BigDecimal.valueOf(0)) > 0)
                     .filter(product -> product.getStock() > 0)
@@ -68,22 +67,25 @@ public class CustomProductDao implements ProductDao {
         }
 
     }
-    private Comparator<Product> setQueryComparator(String query){
+
+    private Comparator<Product> setQueryComparator(String query) {
         return Comparator.comparing(Product::getDescription, (s1, s2) -> Double.compare(StringChecker.calculateStringSimilarity(s2, query), StringChecker.calculateStringSimilarity(s1, query)));
     }
-    private Comparator<Product> setComparator(SortField sortField, SortOrder sortOrder, String query){
+
+    private Comparator<Product> setComparator(SortField sortField, SortOrder sortOrder, String query) {
         Comparator<Product> comparator;
 
-        comparator=(sortField == SortField.PRICE)
+        comparator = (sortField == SortField.PRICE)
                 ? Comparator.comparing(Product::getPrice)
                 : (StringUtils.isEmpty(query)) ? Comparator.comparing(Product::getDescription) : setQueryComparator(query);
 
-        comparator=(sortOrder == SortOrder.DESC)
+        comparator = (sortOrder == SortOrder.DESC)
                 ? comparator.reversed()
                 : comparator;
 
         return comparator;
     }
+
     @Override
     public void save(Product product) throws ProductDefinitionException {
         if (product == null)
@@ -95,7 +97,7 @@ public class CustomProductDao implements ProductDao {
                 products.set(products.indexOf(oldProduct.get()), product);
             } else {
                 products.add(product);
-            };
+            }
         } finally {
             writeLock.unlock();
         }
@@ -112,13 +114,15 @@ public class CustomProductDao implements ProductDao {
             writeLock.unlock();
         }
     }
-    @Override
-    public void setProducts(List<Product> products){
-        this.products=products;
-    }
+
     @Override
     public List<Product> getProducts() {
         return products;
+    }
+
+    @Override
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 
     public void changeChosenState(Product product, boolean state) {

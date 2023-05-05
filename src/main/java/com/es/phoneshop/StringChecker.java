@@ -15,9 +15,9 @@ public class StringChecker {
         Set<String> criteriaWords = Arrays.stream(criteriaString.toLowerCase().split("\\s+"))
                 .collect(Collectors.toSet());
 
-        double wordsCount=Arrays.stream(sourceString.toLowerCase().split("\\s+"))
-                                .filter(criteriaWords::contains)
-                                .count();
-        return wordsCount/sourceString.length();
+        double wordsCount = Arrays.stream(sourceString.toLowerCase().split("\\s+"))
+                .filter(criteriaWords::contains)
+                .count();
+        return wordsCount / sourceString.length();
     }
 }

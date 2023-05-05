@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public class CustomProductService implements ProductService {
     private static CustomProductService customProductService;
-    private ProductDao productDao;
+    private final ProductDao productDao;
 
     private CustomProductService() {
         productDao = CustomProductDao.getInstance();
@@ -43,13 +43,13 @@ public class CustomProductService implements ProductService {
         if (optionalProduct.isPresent()) {
             return optionalProduct.get();
         } else {
-            throw new ProductDefinitionException(id,"Product not found for id: " + id);
+            throw new ProductDefinitionException(id, "Product not found for id: " + id);
         }
     }
 
     @Override
     public void saveProduct(Product product) {
-            productDao.save(product);
+        productDao.save(product);
     }
 
     @Override

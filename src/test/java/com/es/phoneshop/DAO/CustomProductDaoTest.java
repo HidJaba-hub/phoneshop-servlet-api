@@ -40,6 +40,7 @@ public class CustomProductDaoTest {
         List<Product> mockedProducts = Arrays.asList(mockedProduct, anotherMockedProduct);
         mockedProducts
                 .forEach(product -> {
+                    when(product.getDescription()).thenReturn("test");
                     when(product.getStock()).thenReturn(10);
                     when(product.getPrice()).thenReturn(new BigDecimal("10.0"));
                 });
@@ -47,10 +48,21 @@ public class CustomProductDaoTest {
     }
 
     @Test
+    public void givenProductWithDescription_whenFindProducts_thenGetProduct() {
+        when(mockedProduct.getDescription()).thenReturn("testing");
+
+        List<Product> products = productDao.findProducts(SortField.DESCRIPTION, SortOrder.DESC, "testing");
+
+        assertFalse(products.isEmpty());
+        assertTrue(products.contains(mockedProduct));
+        assertFalse(products.contains(anotherMockedProduct));
+    }
+
+    @Test
     public void givenProductWithZeroStock_whenFindProducts_thenGetProducts() {
         when(mockedProduct.getStock()).thenReturn(0);
 
-        List<Product> products = productDao.findProducts(SortField.DESCRIPTION, SortOrder.DESC, "");
+        List<Product> products = productDao.findProducts(SortField.DESCRIPTION, SortOrder.DESC, null);
 
         assertFalse(products.isEmpty());
         assertFalse(products.contains(mockedProduct));
@@ -60,7 +72,7 @@ public class CustomProductDaoTest {
     public void givenProductWithNullPrice_whenFindProducts_thenGetProducts() {
         when(mockedProduct.getPrice()).thenReturn(null);
 
-        List<Product> products = productDao.findProducts(SortField.DESCRIPTION, SortOrder.DESC, "");
+        List<Product> products = productDao.findProducts(SortField.PRICE, SortOrder.ASC, null);
 
         assertFalse(products.isEmpty());
         assertFalse(products.contains(mockedProduct));
@@ -69,7 +81,7 @@ public class CustomProductDaoTest {
     @Test
     public void givenProduct_whenDeleteProduct_thenGetProduct() {
         productDao.delete(mockedProduct.getId());
-        List<Product> products = productDao.findProducts(SortField.DESCRIPTION, SortOrder.DESC, "");
+        List<Product> products = productDao.findProducts(SortField.DESCRIPTION, SortOrder.DESC, null);
 
         assertFalse(products.contains(mockedProduct));
     }
