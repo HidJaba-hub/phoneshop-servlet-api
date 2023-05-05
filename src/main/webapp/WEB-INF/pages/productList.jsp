@@ -36,12 +36,11 @@
                     <a href="${pageContext.servletContext.contextPath}/products/${product.id}">${product.description}</a>
                 </td>
                 <td class="price">
-                    <script src="${pageContext.servletContext.contextPath}/scripts/showHide.js"></script>
-                    <a href="#" onmouseover="showHide(${loop.index})" onmouseleave="showHide(${loop.index})">
-                        <fmt:formatNumber value="${product.price}" type="currency"
-                                          currencySymbol="${product.currency.symbol}"/>
+                    <script src="${pageContext.servletContext.contextPath}/scripts/showHid.js"></script>
+                    <a href="#" onmouseover="showHid(${loop.index})" onmouseleave="showHid(${loop.index})">
+                        <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
                     </a>
-                    <div id="popup${loop.index}" class="popup" style="display: none">
+                    <div id="${loop.index}" class="popup" style="display: none">
                         <tags:popup product="${product}"/>
                     </div>
                 </td>

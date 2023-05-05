@@ -1,7 +1,4 @@
 <%@ tag trimDirectiveWhitespaces="true" %>
-<style>
-    <%@ include file="/styles/main.css" %>
-</style>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ attribute name="product" required="true" type="com.es.phoneshop.model.entity.Product" %>
@@ -16,15 +13,14 @@
             <th>Price</th>
         </tr>
         </thead>
-        <c:forEach var="priceChange" items="${product.priceHistoryList}">
+        <c:forEach var="priceChange" items="${product.priceHistory}">
             <tr>
                 <td>
                     <fmt:setLocale value="en_US"/>
                     <fmt:formatDate value="${priceChange.date}" type="date" pattern="dd MMM yyyy"/>
                 </td>
                 <td>
-                        ${product.currency.symbol}
-                    <fmt:formatNumber value="${priceChange.price}"/>
+                    <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
                 </td>
             </tr>
         </c:forEach>

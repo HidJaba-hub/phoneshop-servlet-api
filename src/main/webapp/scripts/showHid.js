@@ -1,5 +1,5 @@
-function showHide(index) {
-    const el = document.getElementById("popup" + index);
+function showHid(index) {
+    const el = document.getElementById(index);
     if (el.style.display === "none") {
         el.style.display = "block";
     } else {

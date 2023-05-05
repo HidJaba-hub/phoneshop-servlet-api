@@ -4,7 +4,5 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
 <tags:master pageTitle="Product Details">
-    <h1>
-        Product with id ${pageContext.exception.id} not found
-    </h1>
+    <h1>Product with id ${pageContext.exception.id} not found</h1>
 </tags:master>

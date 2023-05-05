@@ -17,19 +17,9 @@ import java.util.Date;
 import java.util.List;
 
 public class DemoDataServletContextListener implements ServletContextListener {
+    //as i understand i need to test this class too, but i have no idea at all how to do it
     private final Currency usd = Currency.getInstance("USD");
     private ProductService productService;
-
-    public static int createRandomIntBetween(int start, int end) {
-        return start + (int) Math.round(Math.random() * (end - start));
-    }
-
-    public static LocalDate createRandomDate() {
-        int day = createRandomIntBetween(1, 28);
-        int month = createRandomIntBetween(1, 12);
-        int year = createRandomIntBetween(2000, 2023);
-        return LocalDate.of(year, month, day);
-    }
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
@@ -73,5 +63,16 @@ public class DemoDataServletContextListener implements ServletContextListener {
         }
         priceHistoryList.sort(Comparator.comparing(PriceHistory::getDate));
         return priceHistoryList;
+    }
+
+    public static int createRandomIntBetween(int start, int end) {
+        return start + (int) Math.round(Math.random() * (end - start));
+    }
+
+    public static LocalDate createRandomDate() {
+        int day = createRandomIntBetween(1, 28);
+        int month = createRandomIntBetween(1, 12);
+        int year = createRandomIntBetween(2000, 2023);
+        return LocalDate.of(year, month, day);
     }
 }

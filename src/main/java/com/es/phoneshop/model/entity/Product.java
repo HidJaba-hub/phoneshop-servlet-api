@@ -28,7 +28,7 @@ public class Product {
     private int stock;
     private String imageUrl;
     private Boolean isChosen = false;
-    private List<PriceHistory> priceHistoryList;
+    private List<PriceHistory> priceHistory;
 
     public Product() {
         this.id = UUID.randomUUID().getMostSignificantBits();
@@ -42,6 +42,6 @@ public class Product {
         this.currency = currency;
         this.stock = stock;
         this.imageUrl = imageUrl;
-        this.priceHistoryList = priceHistoryList;
+        this.priceHistory = priceHistoryList;
     }
 }

@@ -78,7 +78,3 @@ body.product-list {
 .popup table, .popup td {
     border: none;
 }
-
-.popup th, .popup td {
-    text-align: center;
-}
