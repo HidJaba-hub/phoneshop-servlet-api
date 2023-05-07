@@ -16,12 +16,13 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DemoDataServletContextListenerTest {
-    ProductDao productDao=CustomProductDao.getInstance();
-    DemoDataServletContextListener demoDataServletContextListener=new DemoDataServletContextListener();
+    ProductDao productDao = CustomProductDao.getInstance();
+    DemoDataServletContextListener demoDataServletContextListener = new DemoDataServletContextListener();
     @Mock
     ServletContext context;
     @Mock
     ServletContextEvent event;
+
     @Before
     public void setup() {
         when(event.getServletContext()).thenReturn(context);
@@ -40,6 +41,6 @@ public class DemoDataServletContextListenerTest {
         demoDataServletContextListener.contextInitialized(event);
 
         assertNotNull(productDao.getProducts());
-        assertTrue(productDao.getProducts().size()>0);
+        assertTrue(productDao.getProducts().size() > 0);
     }
 }
