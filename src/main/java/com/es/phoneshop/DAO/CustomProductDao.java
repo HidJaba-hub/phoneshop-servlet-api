@@ -22,8 +22,8 @@ public class CustomProductDao implements ProductDao {
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     private final Lock readLock = lock.readLock();
     private final Lock writeLock = lock.writeLock();
-    private List<Product> products;
     private final Comparator<Product> defaultComparator = Comparator.comparing(Product::getDescription);
+    private List<Product> products;
 
 
     private CustomProductDao() {
@@ -57,8 +57,8 @@ public class CustomProductDao implements ProductDao {
         readLock.lock();
         try {
             Comparator<Product> comparator = setOrderComparator(sortOrder,
-                                                setFieldComparator(sortField, query,
-                                                        setQueryComparator(query, defaultComparator)));
+                    setFieldComparator(sortField, query,
+                            setQueryComparator(query, defaultComparator)));
             // i created this nested system of comparators that are independent of each other so it can be easily expanded
             // it is also safe because as a root we have default comparator, and if all parameters will be null it will just return default comparator
             return products.stream()
@@ -76,33 +76,36 @@ public class CustomProductDao implements ProductDao {
     }
 
     private Comparator<Product> setQueryComparator(String query, Comparator<Product> comparator) {
-        if(StringUtils.isEmpty(query)) return comparator;
+        if (StringUtils.isEmpty(query)) return comparator;
         return Comparator.comparing(Product::getDescription,
-                        (s1, s2) -> Double.compare(
-                                StringChecker.calculateStringSimilarity(s2, query),
-                                StringChecker.calculateStringSimilarity(s1, query)
-                        )
+                (s1, s2) -> Double.compare(
+                        StringChecker.calculateStringSimilarity(s2, query),
+                        StringChecker.calculateStringSimilarity(s1, query)
+                )
         );
     }
+
     private Comparator<Product> setFieldComparator(SortField sortField, String query, Comparator<Product> comparator) {
         if (sortField == null) return comparator;
-        return switch (sortField){ // I decided to make a switch because it will be easier to expand in the future
+        return switch (sortField) { // I decided to make a switch because it will be easier to expand in the future
             case PRICE -> Comparator.comparing(Product::getPrice);
-            case DESCRIPTION  -> (StringUtils.isEmpty(query))
-                                ? Comparator.comparing(Product::getDescription)
-                                : comparator;
+            case DESCRIPTION -> (StringUtils.isEmpty(query))
+                    ? Comparator.comparing(Product::getDescription)
+                    : comparator;
             // if we have filter on description we just return comparator with string filtering, so we can just change the order
             // but if we change price order for ex (there isn't any price filter, but it can be easily added)
             // it will change order according price, excluding filtering
         };
     }
-    private Comparator<Product> setOrderComparator(SortOrder sortOrder, Comparator<Product> comparator){
+
+    private Comparator<Product> setOrderComparator(SortOrder sortOrder, Comparator<Product> comparator) {
         if (sortOrder == null) return comparator;
-        return switch (sortOrder){
+        return switch (sortOrder) {
             case DESC -> comparator.reversed();
-            case ASC  -> comparator;
+            case ASC -> comparator;
         };
     }
+
     @Override
     public void save(Product product) throws ProductDefinitionException {
         if (product == null)
