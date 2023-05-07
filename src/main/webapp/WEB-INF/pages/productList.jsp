@@ -38,7 +38,8 @@
                 <td class="price">
                     <script src="${pageContext.servletContext.contextPath}/scripts/showHid.js"></script>
                     <a href="#" onmouseover="showHid(${loop.index})" onmouseleave="showHid(${loop.index})">
-                        <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
+                        <fmt:formatNumber value="${product.price}" type="currency"
+                                          currencySymbol="${product.currency.symbol}"/>
                     </a>
                     <div id="${loop.index}" class="popup" style="display: none">
                         <tags:popup product="${product}"/>
