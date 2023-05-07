@@ -53,7 +53,7 @@ public class DemoDataServletContextListener implements ServletContextListener {
         productService.saveProduct(new Product("simsxg75", "Siemens SXG75", new BigDecimal(150), usd, 40, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20SXG75.jpg", generateRandomPriceHistory()));
     }
 
-    List<PriceHistory> generateRandomPriceHistory() {
+    private List<PriceHistory> generateRandomPriceHistory() {
         List<PriceHistory> priceHistoryList = new ArrayList<>();
         int priceHistoryLength = createRandomIntBetween(1, 10);
 
@@ -65,11 +65,11 @@ public class DemoDataServletContextListener implements ServletContextListener {
         return priceHistoryList;
     }
 
-    public static int createRandomIntBetween(int start, int end) {
+    private int createRandomIntBetween(int start, int end) {
         return start + (int) Math.round(Math.random() * (end - start));
     }
 
-    public static LocalDate createRandomDate() {
+    private LocalDate createRandomDate() {
         int day = createRandomIntBetween(1, 28);
         int month = createRandomIntBetween(1, 12);
         int year = createRandomIntBetween(2000, 2023);
