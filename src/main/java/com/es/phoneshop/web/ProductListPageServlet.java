@@ -30,11 +30,17 @@ public class ProductListPageServlet extends HttpServlet {
         String order = request.getParameter("order");
         String query = request.getParameter("query");
 
-        SortField sortField = StringUtils.isEmpty(sort) ? null : SortField.valueOf(sort.toUpperCase());
-        SortOrder sortOrder = StringUtils.isEmpty(order) ? null : SortOrder.valueOf(order.toUpperCase());
 
-        request.setAttribute("products", productService.getProducts(sortField, sortOrder, query));
-
+        if (StringUtils.isEmpty(sort) && StringUtils.isEmpty(order) && StringUtils.isEmpty(query)) {
+            request.setAttribute("products", productService.getProducts());
+        }
+        if (StringUtils.isEmpty(sort) && StringUtils.isEmpty(order) && !StringUtils.isEmpty(query)) {
+            request.setAttribute("products", productService.findProductsByQuery(query));
+        }
+        if (!StringUtils.isEmpty(sort) && !StringUtils.isEmpty(order)) {
+            request.setAttribute("products", productService.getProductsWithSortingAndQuery(
+                    SortField.valueOf(sort.toUpperCase()), SortOrder.valueOf(order.toUpperCase()), query));
+        }
         request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
     }
 

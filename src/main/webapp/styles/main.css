@@ -39,7 +39,7 @@ body.product-list {
 }
 
 
-@keyframes transition {
+@keyframes trans{
     0% {
         opacity: 0;
     }
@@ -61,7 +61,7 @@ body.product-list {
     position: absolute;
     width: fit-content;
     height: fit-content;
-    left: -700px;
+    left: 0;
     right: 0;
     top: 0;
     bottom: 0;
@@ -70,7 +70,7 @@ body.product-list {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
     padding: 30px;
     transition: all;
-    animation-name: transition;
+    animation-name: trans;
     animation-duration: 0.5s;
     animation-iteration-count: 1;
 }

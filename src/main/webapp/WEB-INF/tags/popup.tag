@@ -20,8 +20,8 @@
                     <fmt:formatDate value="${priceChange.date}" type="date" pattern="dd MMM yyyy"/>
                 </td>
                 <td>
-                    <fmt:formatNumber value="${product.price}" type="currency"
-                                      currencySymbol="${product.currency.symbol}"/>
+                    <fmt:formatNumber value="${priceChange.price}" type="currency"
+                                      currencySymbol="${priceChange.currency.symbol}"/>
                 </td>
             </tr>
         </c:forEach>

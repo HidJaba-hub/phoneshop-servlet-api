@@ -2,7 +2,6 @@ package com.es.phoneshop.DAO;
 
 import com.es.phoneshop.SortField;
 import com.es.phoneshop.SortOrder;
-import com.es.phoneshop.exception.ProductDefinitionException;
 import com.es.phoneshop.model.entity.Product;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,14 +43,14 @@ public class CustomProductDaoTest {
                     when(product.getStock()).thenReturn(10);
                     when(product.getPrice()).thenReturn(new BigDecimal("10.0"));
                 });
-        productDao.setProducts(mockedProducts);
+        productDao.getProducts().addAll(0, mockedProducts);
     }
 
     @Test
     public void givenProductWithDescription_whenFindProducts_thenGetProduct() {
         when(mockedProduct.getDescription()).thenReturn("testing");
 
-        List<Product> products = productDao.findProducts(SortField.DESCRIPTION, SortOrder.DESC, "testing");
+        List<Product> products = productDao.sortProducts(SortField.DESCRIPTION, SortOrder.DESC, "testing");
 
         assertFalse(products.isEmpty());
         assertTrue(products.contains(mockedProduct));
@@ -62,7 +61,7 @@ public class CustomProductDaoTest {
     public void givenProductWithZeroStock_whenFindProducts_thenGetProducts() {
         when(mockedProduct.getStock()).thenReturn(0);
 
-        List<Product> products = productDao.findProducts(SortField.DESCRIPTION, SortOrder.DESC, null);
+        List<Product> products = productDao.sortProducts(SortField.DESCRIPTION, SortOrder.DESC, null);
 
         assertFalse(products.isEmpty());
         assertFalse(products.contains(mockedProduct));
@@ -72,7 +71,7 @@ public class CustomProductDaoTest {
     public void givenProductWithNullPrice_whenFindProducts_thenGetProducts() {
         when(mockedProduct.getPrice()).thenReturn(null);
 
-        List<Product> products = productDao.findProducts(SortField.PRICE, SortOrder.ASC, null);
+        List<Product> products = productDao.sortProducts(SortField.PRICE, SortOrder.ASC, null);
 
         assertFalse(products.isEmpty());
         assertFalse(products.contains(mockedProduct));
@@ -81,7 +80,7 @@ public class CustomProductDaoTest {
     @Test
     public void givenProduct_whenDeleteProduct_thenGetProduct() {
         productDao.delete(mockedProduct.getId());
-        List<Product> products = productDao.findProducts(SortField.DESCRIPTION, SortOrder.DESC, null);
+        List<Product> products = productDao.sortProducts(SortField.DESCRIPTION, SortOrder.DESC, null);
 
         assertFalse(products.contains(mockedProduct));
     }
@@ -94,7 +93,7 @@ public class CustomProductDaoTest {
         assertEquals(expectedProduct.get(), mockedProduct);
     }
 
-    @Test(expected = ProductDefinitionException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void givenNullProduct_whenSaving_thenGetException() {
         productDao.save(null);
     }
@@ -104,18 +103,10 @@ public class CustomProductDaoTest {
         Product productToSave = Mockito.mock(Product.class);
 
         productDao.save(productToSave);
+        List<Product> products = productDao.getProducts();
 
-        assertNotNull(productDao.getProducts());
-        assertTrue(productDao.getProducts().contains(productToSave));
+        assertNotNull(products);
+        assertTrue(products.contains(productToSave));
     }
 
-    @Test
-    public void givenProduct_whenChangingState_thenGetState() {
-        when(mockedProduct.getIsChosen()).thenReturn(true);
-
-        productDao.changeChosenState(mockedProduct, true);
-
-        assertNotNull(mockedProduct.getIsChosen());
-        assertTrue(mockedProduct.getIsChosen());
-    }
 }

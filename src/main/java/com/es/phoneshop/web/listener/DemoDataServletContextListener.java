@@ -18,6 +18,7 @@ import java.util.List;
 
 public class DemoDataServletContextListener implements ServletContextListener {
     private final Currency usd = Currency.getInstance("USD");
+
     private ProductService productService;
 
     @Override
@@ -58,7 +59,8 @@ public class DemoDataServletContextListener implements ServletContextListener {
 
         for (int i = 0; i < priceHistoryLength; i++) {
             Date date = Date.from(createRandomDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
-            priceHistoryList.add(new PriceHistory(date, usd, new BigDecimal(createRandomIntBetween(100, 5000))));
+            BigDecimal price = new BigDecimal(createRandomIntBetween(100, 5000));
+            priceHistoryList.add(new PriceHistory(date, usd, price));
         }
         priceHistoryList.sort(Comparator.comparing(PriceHistory::getDate));
         return priceHistoryList;

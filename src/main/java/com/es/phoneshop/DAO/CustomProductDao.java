@@ -3,7 +3,6 @@ package com.es.phoneshop.DAO;
 import com.es.phoneshop.SortField;
 import com.es.phoneshop.SortOrder;
 import com.es.phoneshop.StringChecker;
-import com.es.phoneshop.exception.ProductDefinitionException;
 import com.es.phoneshop.model.entity.Product;
 import org.apache.maven.shared.utils.StringUtils;
 
@@ -22,7 +21,6 @@ public class CustomProductDao implements ProductDao {
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     private final Lock readLock = lock.readLock();
     private final Lock writeLock = lock.writeLock();
-    private final Comparator<Product> defaultComparator = Comparator.comparing(Product::getDescription);
     private List<Product> products;
 
 
@@ -53,30 +51,59 @@ public class CustomProductDao implements ProductDao {
     }
 
     @Override
-    public List<Product> findProducts(SortField sortField, SortOrder sortOrder, String query) {
+    public List<Product> findProducts() {
+        readLock.lock();
+        try {
+            return products.stream()
+                    .filter(product -> product.getPrice() != null)
+                    .filter(product -> product.getPrice().compareTo(BigDecimal.valueOf(0)) > 0)
+                    .filter(product -> product.getStock() > 0)
+                    .collect(Collectors.toList());
+        } finally {
+            readLock.unlock();
+        }
+    }
+
+    public List<Product> findProductsByQuery(String query) {
+        readLock.lock();
+        try {
+            Comparator<Product> comparator = setQueryComparator(query);
+            return getProductList(query, comparator);
+        } finally {
+            readLock.unlock();
+        }
+    }
+
+    private List<Product> getProductList(String query, Comparator<Product> comparator) {
+        return products.stream()
+                .filter(product -> StringUtils.isEmpty(query) ||
+                        StringChecker.calculateStringSimilarity(product.getDescription(), query) > 0)
+                .filter(product -> product.getPrice() != null)
+                .filter(product -> product.getPrice().compareTo(BigDecimal.valueOf(0)) > 0)
+                .filter(product -> product.getStock() > 0)
+                .sorted(comparator)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Product> sortProducts(SortField sortField, SortOrder sortOrder, String query) {
         readLock.lock();
         try {
             Comparator<Product> comparator = setOrderComparator(sortOrder,
                     setFieldComparator(sortField, query,
-                            setQueryComparator(query, defaultComparator)));
-            // i created this nested system of comparators that are independent of each other so it can be easily expanded
-            // it is also safe because as a root we have default comparator, and if all parameters will be null it will just return default comparator
-            return products.stream()
-                    .filter(product -> StringUtils.isEmpty(query)
-                            || StringChecker.calculateStringSimilarity(product.getDescription(), query) > 0)
-                    .filter(product -> product.getPrice() != null)
-                    .filter(product -> product.getPrice().compareTo(BigDecimal.valueOf(0)) > 0)
-                    .filter(product -> product.getStock() > 0)
-                    .sorted(comparator)
-                    .collect(Collectors.toList());
+                            setQueryComparator(query)));
+            //i saved query here because in filter page we must sort by query(relevance), not by description it is not logical
+            return getProductList(query, comparator);
         } finally {
             readLock.unlock();
         }
 
     }
 
-    private Comparator<Product> setQueryComparator(String query, Comparator<Product> comparator) {
-        if (StringUtils.isEmpty(query)) return comparator;
+    private Comparator<Product> setQueryComparator(String query) {
+        if (StringUtils.isEmpty(query)) {
+            return Comparator.naturalOrder();
+        }
         return Comparator.comparing(Product::getDescription,
                 (s1, s2) -> Double.compare(
                         StringChecker.calculateStringSimilarity(s2, query),
@@ -86,20 +113,15 @@ public class CustomProductDao implements ProductDao {
     }
 
     private Comparator<Product> setFieldComparator(SortField sortField, String query, Comparator<Product> comparator) {
-        if (sortField == null) return comparator;
-        return switch (sortField) { // I decided to make a switch because it will be easier to expand in the future
+        return switch (sortField) {
             case PRICE -> Comparator.comparing(Product::getPrice);
             case DESCRIPTION -> (StringUtils.isEmpty(query))
                     ? Comparator.comparing(Product::getDescription)
                     : comparator;
-            // if we have filter on description we just return comparator with string filtering, so we can just change the order
-            // but if we change price order for ex (there isn't any price filter, but it can be easily added)
-            // it will change order according price, excluding filtering
         };
     }
 
     private Comparator<Product> setOrderComparator(SortOrder sortOrder, Comparator<Product> comparator) {
-        if (sortOrder == null) return comparator;
         return switch (sortOrder) {
             case DESC -> comparator.reversed();
             case ASC -> comparator;
@@ -107,9 +129,9 @@ public class CustomProductDao implements ProductDao {
     }
 
     @Override
-    public void save(Product product) throws ProductDefinitionException {
+    public void save(Product product) throws IllegalArgumentException {
         if (product == null)
-            throw new ProductDefinitionException("Product has no data");
+            throw new IllegalArgumentException("Product has no data");
         writeLock.lock();
         try {
             Optional<Product> oldProduct = getProductById(product.getId());
@@ -140,12 +162,4 @@ public class CustomProductDao implements ProductDao {
         return products;
     }
 
-    @Override
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
-
-    public void changeChosenState(Product product, boolean state) {
-        product.setIsChosen(state);
-    }
 }

@@ -9,11 +9,13 @@ import java.util.List;
 public interface ProductService {
     Product getProductById(Long id);
 
-    List<Product> getProducts(SortField sortField, SortOrder sortOrder, String query);
+    List<Product> getProducts();
+
+    List<Product> findProductsByQuery(String query);
+
+    List<Product> getProductsWithSortingAndQuery(SortField sortField, SortOrder sortOrder, String query);
 
     void deleteProduct(Long id);
-
-    void changeState(Product product, boolean state);
 
     void saveProduct(Product product);
 }

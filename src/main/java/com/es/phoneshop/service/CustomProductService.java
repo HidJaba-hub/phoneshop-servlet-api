@@ -4,7 +4,7 @@ import com.es.phoneshop.DAO.CustomProductDao;
 import com.es.phoneshop.DAO.ProductDao;
 import com.es.phoneshop.SortField;
 import com.es.phoneshop.SortOrder;
-import com.es.phoneshop.exception.ProductDefinitionException;
+import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.entity.Product;
 
 import java.util.List;
@@ -28,8 +28,13 @@ public class CustomProductService implements ProductService {
     }
 
     @Override
-    public List<Product> getProducts(SortField sortField, SortOrder sortOrder, String query) {
-        return productDao.findProducts(sortField, sortOrder, query);
+    public List<Product> getProductsWithSortingAndQuery(SortField sortField, SortOrder sortOrder, String query) {
+        return productDao.sortProducts(sortField, sortOrder, query);
+    }
+
+    @Override
+    public List<Product> findProductsByQuery(String query) {
+        return productDao.findProductsByQuery(query);
     }
 
     @Override
@@ -41,7 +46,12 @@ public class CustomProductService implements ProductService {
     public Product getProductById(Long id) {
         Optional<Product> optionalProduct = productDao.getProductById(id);
         return optionalProduct.orElseThrow(() ->
-                new ProductDefinitionException(id, "Product not found for id: " + id));
+                new ProductNotFoundException(id, "Product not found for id: " + id));
+    }
+
+    @Override
+    public List<Product> getProducts() {
+        return productDao.findProducts();
     }
 
     @Override
@@ -49,9 +59,5 @@ public class CustomProductService implements ProductService {
         productDao.save(product);
     }
 
-    @Override
-    public void changeState(Product product, boolean state) {
-        productDao.changeChosenState(product, state);
-    }
 
 }

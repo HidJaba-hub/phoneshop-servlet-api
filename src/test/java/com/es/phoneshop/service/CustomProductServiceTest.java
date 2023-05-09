@@ -3,7 +3,7 @@ package com.es.phoneshop.service;
 import com.es.phoneshop.DAO.ProductDao;
 import com.es.phoneshop.SortField;
 import com.es.phoneshop.SortOrder;
-import com.es.phoneshop.exception.ProductDefinitionException;
+import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.entity.Product;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -36,9 +35,9 @@ public class CustomProductServiceTest {
     public void givenListWithProduct_whenFindProducts_thenGetProducts() {
         List<Product> expectedList = new ArrayList<>();
         expectedList.add(new Product());
-        when(productDao.findProducts(SortField.DESCRIPTION, SortOrder.DESC, "")).thenReturn(expectedList);
+        when(productDao.sortProducts(SortField.DESCRIPTION, SortOrder.DESC, "")).thenReturn(expectedList);
 
-        List<Product> products = productService.getProducts(SortField.DESCRIPTION, SortOrder.DESC, "");
+        List<Product> products = productService.getProductsWithSortingAndQuery(SortField.DESCRIPTION, SortOrder.DESC, "");
 
         assertEquals(expectedList, products);
     }
@@ -50,7 +49,7 @@ public class CustomProductServiceTest {
         verify(productDao).delete(1L);
     }
 
-    @Test(expected = ProductDefinitionException.class)
+    @Test(expected = ProductNotFoundException.class)
     public void givenId_whenGetProductByID_thenGetException() {
         productService.getProductById(-1L);
     }
@@ -74,12 +73,4 @@ public class CustomProductServiceTest {
         verify(productDao).save(productToSave);
     }
 
-    @Test
-    public void givenProduct_whenChangingState_thenGetState() {
-        Product product = new Product();
-
-        productService.changeState(product, true);
-
-        assertNotNull(product.getIsChosen());
-    }
 }
