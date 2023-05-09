@@ -12,7 +12,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class Product {
+public class Product implements Comparable<Product> {
 
     private Long id;
     private String code;
@@ -27,14 +27,14 @@ public class Product {
     private Currency currency;
     private int stock;
     private String imageUrl;
-    private Boolean isChosen = false;
     private List<PriceHistory> priceHistory;
 
     public Product() {
         this.id = UUID.randomUUID().getMostSignificantBits();
     }
 
-    public Product(String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl, List<PriceHistory> priceHistoryList) {
+    public Product(String code, String description, BigDecimal price, Currency currency,
+                   int stock, String imageUrl, List<PriceHistory> priceHistoryList) {
         this.id = UUID.randomUUID().getMostSignificantBits();
         this.code = code;
         this.description = description;
@@ -43,5 +43,10 @@ public class Product {
         this.stock = stock;
         this.imageUrl = imageUrl;
         this.priceHistory = priceHistoryList;
+    }
+
+    @Override
+    public int compareTo(Product o) {
+        return 0;
     }
 }

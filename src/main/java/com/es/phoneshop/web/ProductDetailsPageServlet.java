@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.maven.shared.utils.StringUtils;
 
 import java.io.IOException;
 
@@ -21,9 +22,14 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        long productId = Long.valueOf(request.getPathInfo().substring(1));
-        request.setAttribute("product", productService.getProductById(productId));
-        request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
+        if (!StringUtils.isEmpty(request.getPathInfo())) {
+            long productId = Long.valueOf(request.getPathInfo().substring(1));
+            request.setAttribute("product", productService.getProductById(productId));
+            request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
+        }
+        else {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Page not found");
+        }
     }
 
 }

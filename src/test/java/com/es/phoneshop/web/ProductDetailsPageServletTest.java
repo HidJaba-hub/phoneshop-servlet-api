@@ -1,7 +1,7 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.DAO.ProductDao;
-import com.es.phoneshop.exception.ProductDefinitionException;
+import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.entity.Product;
 import com.es.phoneshop.service.CustomProductService;
 import jakarta.servlet.RequestDispatcher;
@@ -51,7 +51,7 @@ public class ProductDetailsPageServletTest {
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
     }
 
-    @Test(expected = ProductDefinitionException.class)
+    @Test(expected = ProductNotFoundException.class)
     public void givenProduct_whenGetRequest_thenGetException() throws ServletException, IOException {
         long productId = -1L;
         when(request.getPathInfo()).thenReturn("/" + productId);
@@ -63,7 +63,7 @@ public class ProductDetailsPageServletTest {
     }
 
     @Test
-    public void givenProduct_whenGetRequest_thenVerify() throws ServletException, IOException {
+    public void givenProduct_whenGetRequest_thenSetProductToAttribute() throws ServletException, IOException {
         Product product = new Product();
         long productId = product.getId();
         when(request.getPathInfo()).thenReturn("/" + productId);

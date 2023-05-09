@@ -14,31 +14,29 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.maven.shared.utils.StringUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ProductListPageServlet extends HttpServlet {
+public class ProductSortServlet extends HttpServlet {
     public ProductService productService;
+    private ObjectMapper objectMapper;
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
         productService = CustomProductService.getInstance();
+        objectMapper = new ObjectMapper();
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String sort = request.getParameter("sort");
+        String order = request.getParameter("order");
         String query = request.getParameter("query");
-
-        if (StringUtils.isEmpty(query)) {
-            request.setAttribute("products", productService.getProducts());
-        }
-        else {
-            request.setAttribute("products", productService.findProductsByQuery(query));
-        }
-
-        request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
+        List<Product> products = productService.getProductsWithSortingAndQuery(SortField.valueOf(sort.toUpperCase()), SortOrder.valueOf(order.toUpperCase()), query);
+        String json = objectMapper.writeValueAsString(products.stream()
+                                                                .map(Product::getId)
+                                                                .collect(Collectors.toList()));
+        response.getWriter().write(json);
     }
-
 }
