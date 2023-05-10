@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class StringChecker {
+
     public static double calculateStringSimilarity(String sourceString, String criteriaString) {
         if (StringUtils.isEmpty(sourceString)) {
             return 0;

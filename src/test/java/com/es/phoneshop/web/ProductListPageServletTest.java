@@ -1,5 +1,6 @@
 package com.es.phoneshop.web;
 
+import com.es.phoneshop.service.ProductService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -21,6 +22,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProductListPageServletTest {
+
     private final ProductListPageServlet servlet = new ProductListPageServlet();
     @Mock
     private HttpServletRequest request;
@@ -30,17 +32,34 @@ public class ProductListPageServletTest {
     private RequestDispatcher requestDispatcher;
     @Mock
     private ServletConfig config;
+    @Mock
+    private ProductService productService;
 
     @Before
     public void setup() throws ServletException {
         servlet.init(config);
+        servlet.setProductService(productService);
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
     }
 
     @Test
-    public void testDoGet() throws ServletException, IOException {
+    public void givenEmptyQuery_whenDoGet_thenVerifyGetProducts() throws ServletException, IOException {
+        when(request.getParameter("query")).thenReturn("");
+
         servlet.doGet(request, response);
 
+        verify(productService).getProducts();
+        verify(requestDispatcher).forward(request, response);
+        verify(request).setAttribute(eq("products"), any());
+    }
+
+    @Test
+    public void givenQuery_whenDoGet_thenVerifyFindProductsByQuery() throws ServletException, IOException {
+        when(request.getParameter("query")).thenReturn("description");
+
+        servlet.doGet(request, response);
+
+        verify(productService).findProductsByQuery("description");
         verify(requestDispatcher).forward(request, response);
         verify(request).setAttribute(eq("products"), any());
     }

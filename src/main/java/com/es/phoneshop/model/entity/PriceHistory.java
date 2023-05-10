@@ -14,6 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class PriceHistory {
+
     private Date date;
     private Currency currency;
     private BigDecimal price;

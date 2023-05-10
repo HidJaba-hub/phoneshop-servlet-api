@@ -17,8 +17,8 @@ import java.util.Date;
 import java.util.List;
 
 public class DemoDataServletContextListener implements ServletContextListener {
-    private final Currency usd = Currency.getInstance("USD");
 
+    private final Currency usd = Currency.getInstance("USD");
     private ProductService productService;
 
     @Override

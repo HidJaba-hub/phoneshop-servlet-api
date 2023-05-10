@@ -17,6 +17,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
 public class CustomProductDao implements ProductDao {
+
     private static CustomProductDao customProductDao;
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     private final Lock readLock = lock.readLock();
@@ -86,7 +87,7 @@ public class CustomProductDao implements ProductDao {
     }
 
     @Override
-    public List<Product> sortProducts(SortField sortField, SortOrder sortOrder, String query) {
+    public List<Product> sortProductsByFieldAndQuery(SortField sortField, SortOrder sortOrder, String query) {
         readLock.lock();
         try {
             Comparator<Product> comparator = setOrderComparator(sortOrder,
@@ -160,6 +161,10 @@ public class CustomProductDao implements ProductDao {
     @Override
     public List<Product> getProducts() {
         return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 
 }

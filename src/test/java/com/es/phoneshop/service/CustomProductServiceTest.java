@@ -20,6 +20,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class CustomProductServiceTest {
+
     @Mock
     private ProductDao productDao;
     @InjectMocks
@@ -32,12 +33,34 @@ public class CustomProductServiceTest {
     }
 
     @Test
+    public void givenListWithProduct_whenSortProducts_thenGetProducts() {
+        List<Product> expectedList = new ArrayList<>();
+        expectedList.add(new Product());
+        when(productDao.sortProductsByFieldAndQuery(SortField.DESCRIPTION, SortOrder.DESC, "")).thenReturn(expectedList);
+
+        List<Product> products = productService.getProductsWithSortingAndQuery(SortField.DESCRIPTION, SortOrder.DESC, "");
+
+        assertEquals(expectedList, products);
+    }
+
+    @Test
     public void givenListWithProduct_whenFindProducts_thenGetProducts() {
         List<Product> expectedList = new ArrayList<>();
         expectedList.add(new Product());
-        when(productDao.sortProducts(SortField.DESCRIPTION, SortOrder.DESC, "")).thenReturn(expectedList);
+        when(productDao.findProducts()).thenReturn(expectedList);
 
-        List<Product> products = productService.getProductsWithSortingAndQuery(SortField.DESCRIPTION, SortOrder.DESC, "");
+        List<Product> products = productService.getProducts();
+
+        assertEquals(expectedList, products);
+    }
+
+    @Test
+    public void givenListWithProduct_whenFindProductsByQuery_thenGetProducts() {
+        List<Product> expectedList = new ArrayList<>();
+        expectedList.add(new Product());
+        when(productDao.findProductsByQuery("")).thenReturn(expectedList);
+
+        List<Product> products = productService.findProductsByQuery("");
 
         assertEquals(expectedList, products);
     }

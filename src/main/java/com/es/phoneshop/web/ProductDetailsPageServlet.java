@@ -12,6 +12,7 @@ import org.apache.maven.shared.utils.StringUtils;
 import java.io.IOException;
 
 public class ProductDetailsPageServlet extends HttpServlet {
+
     private ProductService productService;
 
     @Override
@@ -26,8 +27,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
             long productId = Long.valueOf(request.getPathInfo().substring(1));
             request.setAttribute("product", productService.getProductById(productId));
             request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
-        }
-        else {
+        } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Page not found");
         }
     }

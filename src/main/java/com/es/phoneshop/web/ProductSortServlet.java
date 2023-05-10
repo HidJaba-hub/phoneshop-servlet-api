@@ -11,14 +11,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.maven.shared.utils.StringUtils;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ProductSortServlet extends HttpServlet {
-    public ProductService productService;
+
+    private ProductService productService;
     private ObjectMapper objectMapper;
 
     @Override
@@ -34,9 +34,14 @@ public class ProductSortServlet extends HttpServlet {
         String order = request.getParameter("order");
         String query = request.getParameter("query");
         List<Product> products = productService.getProductsWithSortingAndQuery(SortField.valueOf(sort.toUpperCase()), SortOrder.valueOf(order.toUpperCase()), query);
-        String json = objectMapper.writeValueAsString(products.stream()
-                                                                .map(Product::getId)
-                                                                .collect(Collectors.toList()));
+        String json = objectMapper.writeValueAsString(products
+                .stream()
+                .map(Product::getId)
+                .collect(Collectors.toList()));
         response.getWriter().write(json);
+    }
+
+    public void setProductService(ProductService productService) {
+        this.productService = productService;
     }
 }

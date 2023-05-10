@@ -8,11 +8,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductDao {
+
     Optional<Product> getProductById(Long id);
 
     List<Product> findProducts();
 
-    List<Product> sortProducts(SortField sortField, SortOrder sortOrder, String query);
+    List<Product> sortProductsByFieldAndQuery(SortField sortField, SortOrder sortOrder, String query);
 
     List<Product> findProductsByQuery(String query);
 

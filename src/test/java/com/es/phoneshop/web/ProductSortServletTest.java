@@ -1,6 +1,8 @@
 package com.es.phoneshop.web;
 
-import jakarta.servlet.RequestDispatcher;
+import com.es.phoneshop.SortField;
+import com.es.phoneshop.SortOrder;
+import com.es.phoneshop.service.ProductService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,35 +14,42 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ProductSortServletTest {//i will write this test more detailed because now it is simplified
-    private final ProductListPageServlet servlet = new ProductListPageServlet();
+public class ProductSortServletTest {
+
+    private final ProductSortServlet servlet = new ProductSortServlet();
     @Mock
     private HttpServletRequest request;
     @Mock
     private HttpServletResponse response;
     @Mock
-    private RequestDispatcher requestDispatcher;
-    @Mock
     private ServletConfig config;
+    @Mock
+    private ProductService productService;
+    @Mock
+    private PrintWriter printWriter;
+
     @Before
     public void setup() throws ServletException {
         servlet.init(config);
-        when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
+        servlet.setProductService(productService);
     }
 
     @Test
-    public void testDoGet() throws ServletException, IOException {
+    public void givenSortAndQuery_whenDoGet_thenVerifyGetProductsWithSorting() throws IOException {
+        when(request.getParameter("order")).thenReturn(SortOrder.DESC.toString());
+        when(request.getParameter("sort")).thenReturn(SortField.DESCRIPTION.toString());
+        when(request.getParameter("query")).thenReturn("query");
+        when(response.getWriter()).thenReturn(printWriter);
+
         servlet.doGet(request, response);
 
-        verify(requestDispatcher).forward(request, response);
-        verify(request).setAttribute(eq("products"), any());
+        verify(productService).getProductsWithSortingAndQuery(SortField.DESCRIPTION, SortOrder.DESC, "query");
+        verify(response).getWriter();
     }
 }

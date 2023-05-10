@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class CustomProductService implements ProductService {
+
     private static CustomProductService customProductService;
     private ProductDao productDao;
 
@@ -29,7 +30,7 @@ public class CustomProductService implements ProductService {
 
     @Override
     public List<Product> getProductsWithSortingAndQuery(SortField sortField, SortOrder sortOrder, String query) {
-        return productDao.sortProducts(sortField, sortOrder, query);
+        return productDao.sortProductsByFieldAndQuery(sortField, sortOrder, query);
     }
 
     @Override

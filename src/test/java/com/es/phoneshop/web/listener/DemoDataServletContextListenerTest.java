@@ -20,6 +20,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DemoDataServletContextListenerTest {
+
     private ProductDao productDao = CustomProductDao.getInstance();
     private DemoDataServletContextListener demoDataServletContextListener = new DemoDataServletContextListener();
     @Mock
