@@ -37,7 +37,6 @@ public class ProductListPageServlet extends HttpServlet {
         else {
             request.setAttribute("products", productService.findProductsByQuery(query));
         }
-
         request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
     }
 
