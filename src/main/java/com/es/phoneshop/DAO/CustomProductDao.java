@@ -93,7 +93,6 @@ public class CustomProductDao implements ProductDao {
             Comparator<Product> comparator = setOrderComparator(sortOrder,
                     setFieldComparator(sortField, query,
                             setQueryComparator(query)));
-            //i saved query here because in filter page we must sort by query(relevance), not by description it is not logical
             return getProductList(query, comparator);
         } finally {
             readLock.unlock();
@@ -103,7 +102,12 @@ public class CustomProductDao implements ProductDao {
 
     private Comparator<Product> setQueryComparator(String query) {
         if (StringUtils.isEmpty(query)) {
-            return Comparator.naturalOrder();
+            return new Comparator<Product>() {
+                @Override
+                public int compare(Product o1, Product o2) {
+                    return 0;
+                }
+            };
         }
         return Comparator.comparing(Product::getDescription,
                 (s1, s2) -> Double.compare(

@@ -28,7 +28,7 @@ public class ProductListPageServlet extends HttpServlet {
         if (StringUtils.isEmpty(query)) {
             request.setAttribute("products", productService.getProducts());
         } else {
-            request.setAttribute("products", productService.findProductsByQuery(query));
+            request.setAttribute("products", productService.getProductsByQuery(query));
         }
         request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
     }

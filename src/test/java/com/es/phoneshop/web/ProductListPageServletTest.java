@@ -59,7 +59,7 @@ public class ProductListPageServletTest {
 
         servlet.doGet(request, response);
 
-        verify(productService).findProductsByQuery("description");
+        verify(productService).getProductsByQuery("description");
         verify(requestDispatcher).forward(request, response);
         verify(request).setAttribute(eq("products"), any());
     }

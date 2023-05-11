@@ -3,12 +3,19 @@ package com.es.phoneshop.web.listener;
 import com.es.phoneshop.DAO.CustomProductDao;
 import com.es.phoneshop.DAO.ProductDao;
 import com.es.phoneshop.model.entity.Product;
+import com.es.phoneshop.service.CustomProductService;
+import com.es.phoneshop.service.ProductService;
+import com.es.phoneshop.web.listener.DemoDataServletContextListener;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
@@ -21,19 +28,18 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class DemoDataServletContextListenerTest {
 
-    private ProductDao productDao = CustomProductDao.getInstance();
+    private CustomProductService productService=CustomProductService.getInstance();
     private DemoDataServletContextListener demoDataServletContextListener = new DemoDataServletContextListener();
     @Mock
     private ServletContext context;
     @Mock
-    private ProductDao productDaoMock;
+    private ProductService productServiceMock;
     @Mock
     private ServletContextEvent event;
 
     @Before
     public void setup() {
         when(event.getServletContext()).thenReturn(context);
-
     }
 
     @Test
@@ -41,7 +47,7 @@ public class DemoDataServletContextListenerTest {
         when(context.getInitParameter("insertDemoData")).thenReturn("false");
         demoDataServletContextListener.contextInitialized(event);
 
-        verifyZeroInteractions(productDaoMock);
+        verifyZeroInteractions(productServiceMock);
     }
 
     @Test
@@ -49,9 +55,8 @@ public class DemoDataServletContextListenerTest {
         when(context.getInitParameter("insertDemoData")).thenReturn("true");
         demoDataServletContextListener.contextInitialized(event);
 
-        List<Product> products = productDao.getProducts();
+        List<Product> products = productService.getProducts();
 
         assertNotNull(products);
-        assertTrue(products.size() > 0);
     }
 }

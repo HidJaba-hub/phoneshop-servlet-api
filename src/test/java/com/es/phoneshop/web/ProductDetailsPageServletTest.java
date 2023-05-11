@@ -46,7 +46,7 @@ public class ProductDetailsPageServletTest {
     @Before
     public void setup() throws ServletException {
         servlet.init(config);
-        productService = CustomProductService.getInstance();
+        productService=CustomProductService.getInstance();
         MockitoAnnotations.initMocks(this);
 
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
@@ -68,7 +68,6 @@ public class ProductDetailsPageServletTest {
         Product product = new Product();
         long productId = product.getId();
         when(request.getPathInfo()).thenReturn("/" + productId);
-
         when(productDao.getProductById(productId)).thenReturn(Optional.of(product));
 
         servlet.doGet(request, response);
