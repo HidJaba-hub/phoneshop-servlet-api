@@ -12,7 +12,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class Product{
+public class Product {
 
     private Long id;
     private String code;

@@ -24,7 +24,7 @@ public class CustomProductServiceTest {
     @Mock
     private ProductDao productDao;
     @InjectMocks
-    private CustomProductService productService=CustomProductService.getInstance();
+    private CustomProductService productService = CustomProductService.getInstance();
 
     @Before
     public void setup() {
