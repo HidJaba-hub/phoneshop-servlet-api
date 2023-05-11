@@ -32,7 +32,6 @@ public class DemoDataServletContextListenerTest {
 
     @Before
     public void setup() {
-
         when(event.getServletContext()).thenReturn(context);
     }
 
