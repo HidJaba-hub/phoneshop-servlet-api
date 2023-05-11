@@ -91,8 +91,7 @@ public class CustomProductDao implements ProductDao {
         readLock.lock();
         try {
             Comparator<Product> comparator = setOrderComparator(sortOrder,
-                    setFieldComparator(sortField, query,
-                            setQueryComparator(query)));
+                    setFieldComparator(sortField, query));
             return getProductList(query, comparator);
         } finally {
             readLock.unlock();
@@ -101,14 +100,6 @@ public class CustomProductDao implements ProductDao {
     }
 
     private Comparator<Product> setQueryComparator(String query) {
-        if (StringUtils.isEmpty(query)) {
-            return new Comparator<Product>() {
-                @Override
-                public int compare(Product o1, Product o2) {
-                    return 0;
-                }
-            };
-        }
         return Comparator.comparing(Product::getDescription,
                 (s1, s2) -> Double.compare(
                         StringChecker.calculateStringSimilarity(s2, query),
@@ -117,12 +108,12 @@ public class CustomProductDao implements ProductDao {
         );
     }
 
-    private Comparator<Product> setFieldComparator(SortField sortField, String query, Comparator<Product> comparator) {
+    private Comparator<Product> setFieldComparator(SortField sortField, String query) {
         return switch (sortField) {
             case PRICE -> Comparator.comparing(Product::getPrice);
             case DESCRIPTION -> (StringUtils.isEmpty(query))
                     ? Comparator.comparing(Product::getDescription)
-                    : comparator;
+                    : setQueryComparator(query);
         };
     }
 
