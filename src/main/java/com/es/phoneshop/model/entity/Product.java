@@ -12,7 +12,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class Product implements Comparable<Product> {
+public class Product {
 
     private Long id;
     private String code;
@@ -45,8 +45,4 @@ public class Product implements Comparable<Product> {
         this.priceHistory = priceHistoryList;
     }
 
-    @Override
-    public int compareTo(Product o) {
-        return 0;
-    }
 }

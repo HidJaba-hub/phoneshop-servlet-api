@@ -34,7 +34,7 @@ public class CustomProductService implements ProductService {
     }
 
     @Override
-    public List<Product> findProductsByQuery(String query) {
+    public List<Product> getProductsByQuery(String query) {
         return productDao.findProductsByQuery(query);
     }
 

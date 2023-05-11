@@ -12,7 +12,7 @@ public interface ProductService {
 
     List<Product> getProducts();
 
-    List<Product> findProductsByQuery(String query);
+    List<Product> getProductsByQuery(String query);
 
     List<Product> getProductsWithSortingAndQuery(SortField sortField, SortOrder sortOrder, String query);
 

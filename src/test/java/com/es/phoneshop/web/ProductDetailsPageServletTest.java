@@ -1,11 +1,9 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.DAO.ProductDao;
 import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.entity.Product;
-import com.es.phoneshop.service.CustomProductService;
+import com.es.phoneshop.service.ProductService;
 import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,11 +12,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -29,6 +25,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class ProductDetailsPageServletTest {
 
+    @InjectMocks
     private final ProductDetailsPageServlet servlet = new ProductDetailsPageServlet();
     @Mock
     private HttpServletRequest request;
@@ -37,18 +34,10 @@ public class ProductDetailsPageServletTest {
     @Mock
     private RequestDispatcher requestDispatcher;
     @Mock
-    private ServletConfig config;
-    @InjectMocks
-    private CustomProductService productService;
-    @Mock
-    private ProductDao productDao;
+    private ProductService productService;
 
     @Before
-    public void setup() throws ServletException {
-        servlet.init(config);
-        productService = CustomProductService.getInstance();
-        MockitoAnnotations.initMocks(this);
-
+    public void setup() {
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
     }
 
@@ -56,11 +45,9 @@ public class ProductDetailsPageServletTest {
     public void givenProduct_whenGetRequest_thenGetException() throws ServletException, IOException {
         long productId = -1L;
         when(request.getPathInfo()).thenReturn("/" + productId);
+        when(productService.getProductById(productId)).thenThrow(new ProductNotFoundException(productId, "not found"));
 
         servlet.doGet(request, response);
-
-        verify(requestDispatcher).forward(request, response);
-        verify(request).setAttribute(eq("product"), any());
     }
 
     @Test
@@ -68,8 +55,7 @@ public class ProductDetailsPageServletTest {
         Product product = new Product();
         long productId = product.getId();
         when(request.getPathInfo()).thenReturn("/" + productId);
-
-        when(productDao.getProductById(productId)).thenReturn(Optional.of(product));
+        when(productService.getProductById(productId)).thenReturn(product);
 
         servlet.doGet(request, response);
 

@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ attribute name="product" required="true" type="com.es.phoneshop.model.entity.Product" %>
+<style><%@ include file="/styles/main.css"%></style>
 
 <div>
     <h2 style="text-align: left">Price history</h2>

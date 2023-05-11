@@ -58,14 +58,14 @@ body.product-list {
 }
 
 .popup {
-    position: absolute;
+    position: fixed;
     width: fit-content;
     height: fit-content;
-    left: 0;
+    left: 500px;
     right: 0;
-    top: 0;
+    top: 200px;
     bottom: 0;
-    margin: auto;
+    margin: 0;
     border: none;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
     padding: 30px;

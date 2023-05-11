@@ -24,11 +24,10 @@ public class CustomProductServiceTest {
     @Mock
     private ProductDao productDao;
     @InjectMocks
-    private CustomProductService productService;
+    private CustomProductService productService = CustomProductService.getInstance();
 
     @Before
     public void setup() {
-        productService = CustomProductService.getInstance();
         MockitoAnnotations.initMocks(this);
     }
 
@@ -60,7 +59,7 @@ public class CustomProductServiceTest {
         expectedList.add(new Product());
         when(productDao.findProductsByQuery("")).thenReturn(expectedList);
 
-        List<Product> products = productService.findProductsByQuery("");
+        List<Product> products = productService.getProductsByQuery("");
 
         assertEquals(expectedList, products);
     }

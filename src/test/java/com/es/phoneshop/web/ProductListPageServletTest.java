@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -23,6 +24,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class ProductListPageServletTest {
 
+    @InjectMocks
     private final ProductListPageServlet servlet = new ProductListPageServlet();
     @Mock
     private HttpServletRequest request;
@@ -59,7 +61,7 @@ public class ProductListPageServletTest {
 
         servlet.doGet(request, response);
 
-        verify(productService).findProductsByQuery("description");
+        verify(productService).getProductsByQuery("description");
         verify(requestDispatcher).forward(request, response);
         verify(request).setAttribute(eq("products"), any());
     }
