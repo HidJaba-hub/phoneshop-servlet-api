@@ -1,8 +1,9 @@
 package com.es.phoneshop.web;
 
+import com.es.phoneshop.exception.ProductNotFoundException;
+import com.es.phoneshop.model.entity.Product;
 import com.es.phoneshop.service.ProductService;
 import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,10 +23,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ProductListPageServletTest {
+public class ProductDetailsPageServletTest {
 
     @InjectMocks
-    private final ProductListPageServlet servlet = new ProductListPageServlet();
+    private final ProductDetailsPageServlet servlet = new ProductDetailsPageServlet();
     @Mock
     private HttpServletRequest request;
     @Mock
@@ -33,36 +34,32 @@ public class ProductListPageServletTest {
     @Mock
     private RequestDispatcher requestDispatcher;
     @Mock
-    private ServletConfig config;
-    @Mock
     private ProductService productService;
 
     @Before
-    public void setup() throws ServletException {
-        servlet.init(config);
-        servlet.setProductService(productService);
+    public void setup() {
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
     }
 
-    @Test
-    public void givenEmptyQuery_whenDoGet_thenVerifyGetProducts() throws ServletException, IOException {
-        when(request.getParameter("query")).thenReturn("");
+    @Test(expected = ProductNotFoundException.class)
+    public void givenProduct_whenGetRequest_thenGetException() throws ServletException, IOException {
+        long productId = -1L;
+        when(request.getPathInfo()).thenReturn("/" + productId);
+        when(productService.getProductById(productId)).thenThrow(new ProductNotFoundException(productId, "not found"));
 
         servlet.doGet(request, response);
-
-        verify(productService).getProducts();
-        verify(requestDispatcher).forward(request, response);
-        verify(request).setAttribute(eq("products"), any());
     }
 
     @Test
-    public void givenQuery_whenDoGet_thenVerifyFindProductsByQuery() throws ServletException, IOException {
-        when(request.getParameter("query")).thenReturn("description");
+    public void givenProduct_whenGetRequest_thenSetProductToAttribute() throws ServletException, IOException {
+        Product product = new Product();
+        long productId = product.getId();
+        when(request.getPathInfo()).thenReturn("/" + productId);
+        when(productService.getProductById(productId)).thenReturn(product);
 
         servlet.doGet(request, response);
 
-        verify(productService).getProductsByQuery("description");
         verify(requestDispatcher).forward(request, response);
-        verify(request).setAttribute(eq("products"), any());
+        verify(request).setAttribute(eq("product"), any());
     }
 }

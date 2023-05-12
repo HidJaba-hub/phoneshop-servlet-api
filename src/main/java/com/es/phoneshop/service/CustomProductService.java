@@ -2,13 +2,16 @@ package com.es.phoneshop.service;
 
 import com.es.phoneshop.DAO.CustomProductDao;
 import com.es.phoneshop.DAO.ProductDao;
-import com.es.phoneshop.exception.ProductDefinitionException;
+import com.es.phoneshop.SortField;
+import com.es.phoneshop.SortOrder;
+import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.entity.Product;
 
 import java.util.List;
 import java.util.Optional;
 
 public class CustomProductService implements ProductService {
+
     private static CustomProductService customProductService;
     private ProductDao productDao;
 
@@ -16,16 +19,23 @@ public class CustomProductService implements ProductService {
         productDao = CustomProductDao.getInstance();
     }
 
-    public static synchronized CustomProductService getInstance() {
+    public static CustomProductService getInstance() {
         if (customProductService == null) {
-            customProductService = new CustomProductService();
+            synchronized (CustomProductService.class) {
+                customProductService = new CustomProductService();
+            }
         }
         return customProductService;
     }
 
     @Override
-    public List<Product> getProducts() {
-        return productDao.findProducts();
+    public List<Product> getProductsWithSortingAndQuery(SortField sortField, SortOrder sortOrder, String query) {
+        return productDao.sortProductsByFieldAndQuery(sortField, sortOrder, query);
+    }
+
+    @Override
+    public List<Product> getProductsByQuery(String query) {
+        return productDao.findProductsByQuery(query);
     }
 
     @Override
@@ -36,21 +46,19 @@ public class CustomProductService implements ProductService {
     @Override
     public Product getProductById(Long id) {
         Optional<Product> optionalProduct = productDao.getProductById(id);
-        if (optionalProduct.isPresent()) {
-            return optionalProduct.get();
-        } else {
-            throw new ProductDefinitionException("Product not found for id: " + id);
-        }
+        return optionalProduct.orElseThrow(() ->
+                new ProductNotFoundException(id, "Product not found for id: " + id));
+    }
+
+    @Override
+    public List<Product> getProducts() {
+        return productDao.findProducts();
     }
 
     @Override
     public void saveProduct(Product product) {
-            productDao.save(product);
+        productDao.save(product);
     }
 
-    @Override
-    public void changeState(Product product, boolean state) {
-        productDao.changeChosenState(product, state);
-    }
 
 }

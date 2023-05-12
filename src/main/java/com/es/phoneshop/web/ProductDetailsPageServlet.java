@@ -11,29 +11,25 @@ import org.apache.maven.shared.utils.StringUtils;
 
 import java.io.IOException;
 
-public class ProductListPageServlet extends HttpServlet {
+public class ProductDetailsPageServlet extends HttpServlet {
 
     private ProductService productService;
 
     @Override
-    public void init(ServletConfig servletConfig) throws ServletException {
-        super.init(servletConfig);
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
         productService = CustomProductService.getInstance();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String query = request.getParameter("query");
-
-        if (StringUtils.isEmpty(query)) {
-            request.setAttribute("products", productService.getProducts());
+        if (!StringUtils.isEmpty(request.getPathInfo())) {
+            long productId = Long.valueOf(request.getPathInfo().substring(1));
+            request.setAttribute("product", productService.getProductById(productId));
+            request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
         } else {
-            request.setAttribute("products", productService.getProductsByQuery(query));
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Page not found");
         }
-        request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
     }
 
-    public void setProductService(ProductService productService) {
-        this.productService = productService;
-    }
 }

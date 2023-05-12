@@ -2,11 +2,11 @@ package com.es.phoneshop.model.entity;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.Currency;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -27,12 +27,14 @@ public class Product {
     private Currency currency;
     private int stock;
     private String imageUrl;
-    private Boolean isChosen = false;
-    public Product(){
-        this.id=UUID.randomUUID().getMostSignificantBits();
+    private List<PriceHistory> priceHistory;
+
+    public Product() {
+        this.id = UUID.randomUUID().getMostSignificantBits();
     }
 
-    public Product(String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
+    public Product(String code, String description, BigDecimal price, Currency currency,
+                   int stock, String imageUrl, List<PriceHistory> priceHistoryList) {
         this.id = UUID.randomUUID().getMostSignificantBits();
         this.code = code;
         this.description = description;
@@ -40,5 +42,7 @@ public class Product {
         this.currency = currency;
         this.stock = stock;
         this.imageUrl = imageUrl;
+        this.priceHistory = priceHistoryList;
     }
+
 }

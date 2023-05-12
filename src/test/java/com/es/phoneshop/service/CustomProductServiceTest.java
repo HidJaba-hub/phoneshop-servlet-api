@@ -1,7 +1,9 @@
 package com.es.phoneshop.service;
 
 import com.es.phoneshop.DAO.ProductDao;
-import com.es.phoneshop.exception.ProductDefinitionException;
+import com.es.phoneshop.SortField;
+import com.es.phoneshop.SortOrder;
+import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.entity.Product;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,21 +16,30 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class CustomProductServiceTest {
+
     @Mock
     private ProductDao productDao;
     @InjectMocks
-    private CustomProductService productService;
+    private CustomProductService productService = CustomProductService.getInstance();
 
     @Before
     public void setup() {
-        productService = CustomProductService.getInstance();
         MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    public void givenListWithProduct_whenSortProducts_thenGetProducts() {
+        List<Product> expectedList = new ArrayList<>();
+        expectedList.add(new Product());
+        when(productDao.sortProductsByFieldAndQuery(SortField.DESCRIPTION, SortOrder.DESC, "")).thenReturn(expectedList);
+
+        List<Product> products = productService.getProductsWithSortingAndQuery(SortField.DESCRIPTION, SortOrder.DESC, "");
+
+        assertEquals(expectedList, products);
     }
 
     @Test
@@ -43,13 +54,24 @@ public class CustomProductServiceTest {
     }
 
     @Test
+    public void givenListWithProduct_whenFindProductsByQuery_thenGetProducts() {
+        List<Product> expectedList = new ArrayList<>();
+        expectedList.add(new Product());
+        when(productDao.findProductsByQuery("")).thenReturn(expectedList);
+
+        List<Product> products = productService.getProductsByQuery("");
+
+        assertEquals(expectedList, products);
+    }
+
+    @Test
     public void givenId_whenDeleteProduct_thenVerify() {
         productService.deleteProduct(1L);
 
         verify(productDao).delete(1L);
     }
 
-    @Test(expected = ProductDefinitionException.class)
+    @Test(expected = ProductNotFoundException.class)
     public void givenId_whenGetProductByID_thenGetException() {
         productService.getProductById(-1L);
     }
@@ -73,13 +95,4 @@ public class CustomProductServiceTest {
         verify(productDao).save(productToSave);
     }
 
-    @Test
-    public void givenProduct_whenChangingState_thenGetState() {
-        Product product = new Product();
-
-        productService.changeState(product, true);
-
-        assertNotNull(product.getIsChosen());
-        assertTrue(product.getIsChosen());
-    }
 }

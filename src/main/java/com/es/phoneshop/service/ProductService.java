@@ -1,17 +1,22 @@
 package com.es.phoneshop.service;
 
+import com.es.phoneshop.SortField;
+import com.es.phoneshop.SortOrder;
 import com.es.phoneshop.model.entity.Product;
 
 import java.util.List;
 
 public interface ProductService {
+
     Product getProductById(Long id);
 
     List<Product> getProducts();
 
-    void deleteProduct(Long id);
+    List<Product> getProductsByQuery(String query);
 
-    void changeState(Product product, boolean state);
+    List<Product> getProductsWithSortingAndQuery(SortField sortField, SortOrder sortOrder, String query);
+
+    void deleteProduct(Long id);
 
     void saveProduct(Product product);
 }
