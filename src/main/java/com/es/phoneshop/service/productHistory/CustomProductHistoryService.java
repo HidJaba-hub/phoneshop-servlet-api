@@ -4,7 +4,6 @@ import com.es.phoneshop.model.entity.Product;
 import com.es.phoneshop.model.entity.ProductHistory;
 import com.es.phoneshop.utils.SyncObjectPool;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 
 import java.util.Deque;
 
@@ -23,20 +22,16 @@ public class CustomProductHistoryService implements ProductHistoryService {
 
     @Override
     public ProductHistory getProductHistory(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        Object syncObject = SyncObjectPool.getSyncObject(session.hashCode());
+        String sessionId = request.getSession().getId();
+        Object syncObject = SyncObjectPool.getSyncObject(sessionId);
         synchronized (syncObject) {
-            ProductHistory productHistory = (ProductHistory) session.getAttribute(VIEWED_PRODUCTS_SESSION_ATTRIBUTE);
-            if (productHistory == null) {
-                request.getSession().setAttribute(VIEWED_PRODUCTS_SESSION_ATTRIBUTE, productHistory = new ProductHistory());
-            }
-            return productHistory;
+            return (ProductHistory) request.getSession().getAttribute(VIEWED_PRODUCTS_SESSION_ATTRIBUTE);
         }
     }
 
     @Override
     public void addViewedProduct(ProductHistory viewedProducts, Product product) {
-        Object syncObject = SyncObjectPool.getSyncObject(viewedProducts.hashCode());
+        Object syncObject = SyncObjectPool.getSyncObject(viewedProducts.getId().toString());
         synchronized (syncObject) {
             Deque<Product> viewedProductsDeque = viewedProducts.getRecentlyViewedProducts();
             if (findProductInDeque(viewedProductsDeque, product)) {

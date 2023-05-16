@@ -8,7 +8,6 @@ import com.es.phoneshop.service.CustomProductService;
 import com.es.phoneshop.service.ProductService;
 import com.es.phoneshop.utils.SyncObjectPool;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 
 import java.util.Optional;
 
@@ -27,19 +26,16 @@ public class DefaultCartService implements CartService {
 
     @Override
     public Cart getCart(HttpServletRequest request) {
-        Object syncObject = SyncObjectPool.getSyncObject(request.hashCode());
+        String sessionId = request.getSession().getId();
+        Object syncObject = SyncObjectPool.getSyncObject(sessionId);
         synchronized (syncObject) {
-            Cart cart = (Cart) request.getSession().getAttribute(CART_SESSION_ATTRIBUTE);
-            if (cart == null) {
-                request.getSession().setAttribute(CART_SESSION_ATTRIBUTE, cart = new Cart());
-            }
-            return cart;
+            return (Cart) request.getSession().getAttribute(CART_SESSION_ATTRIBUTE);
         }
     }
 
     @Override
     public void addProductToCart(Cart cart, Long productId, int quantity) throws OutOfStockException {
-        Object syncObject = SyncObjectPool.getSyncObject(cart.hashCode());
+        Object syncObject = SyncObjectPool.getSyncObject(cart.getId().toString());
         synchronized (syncObject) {
             Product product = productService.getProductById(productId);
             Optional<CartItem> optionalCartItem = findCartItem(cart, product);
@@ -62,10 +58,10 @@ public class DefaultCartService implements CartService {
 
     private void checkQuantity(Product product, int quantity, int cartQuantity) throws OutOfStockException {
         if (product.getStock() < quantity + cartQuantity) {
-            throw new OutOfStockException(product, quantity, product.getStock());
+            throw new OutOfStockException(product, quantity, product.getStock() - cartQuantity);
         }
         if (quantity <= 0) {
-            throw new OutOfStockException(quantity);
+            throw new IllegalArgumentException();
         }
     }
 

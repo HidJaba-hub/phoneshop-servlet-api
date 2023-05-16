@@ -2,7 +2,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
-<style><%@ include file="/styles/main.css"%></style>
+<style>
+    <%@ include file="/styles/main.css" %>
+</style>
 
 <jsp:useBean id="product" type="com.es.phoneshop.model.entity.Product" scope="request"/>
 <tags:master pageTitle="Product Details">
@@ -14,7 +16,7 @@
     </p>
     <c:if test="${not empty param.message}">
         <div class="success">
-            ${param.message}
+                ${param.message}
         </div>
     </c:if>
     <c:if test="${not empty param.error}">
@@ -40,10 +42,10 @@
                 <td>${product.stock}</td>
             </tr>
             <tr>
-                <td >Price</td>
+                <td>Price</td>
                 <td class="price">
                     <fmt:formatNumber value="${product.price}" type="currency"
-                                  currencySymbol="${product.currency.symbol}"/>
+                                      currencySymbol="${product.currency.symbol}"/>
                 </td>
             </tr>
             <tr>
@@ -59,5 +61,6 @@
             </tr>
         </table>
         <button>Add to cart</button>
+        <tags:viewedProducts/>
     </form>
 </tags:master>

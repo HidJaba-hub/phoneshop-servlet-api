@@ -3,12 +3,16 @@ package com.es.phoneshop.model.entity.cart;
 import lombok.Getter;
 
 import java.util.LinkedHashSet;
+import java.util.UUID;
 
 @Getter
 public class Cart {
 
-    LinkedHashSet<CartItem> items;
+    private Long id;
+    private LinkedHashSet<CartItem> items;
+
     public Cart() {
+        this.id = UUID.randomUUID().getMostSignificantBits();
         this.items = new LinkedHashSet<>();
     }
 

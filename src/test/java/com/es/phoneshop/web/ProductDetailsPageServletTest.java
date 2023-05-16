@@ -3,9 +3,11 @@ package com.es.phoneshop.web;
 import com.es.phoneshop.exception.OutOfStockException;
 import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.entity.Product;
+import com.es.phoneshop.model.entity.ProductHistory;
 import com.es.phoneshop.model.entity.cart.Cart;
 import com.es.phoneshop.service.ProductService;
 import com.es.phoneshop.service.cart.DefaultCartService;
+import com.es.phoneshop.service.productHistory.ProductHistoryService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -46,6 +48,8 @@ public class ProductDetailsPageServletTest {
     @Mock
     private DefaultCartService cartService;
     @Mock
+    private ProductHistoryService productHistoryService;
+    @Mock
     private ServletConfig config;
 
     @Before
@@ -67,15 +71,19 @@ public class ProductDetailsPageServletTest {
     @Test
     public void givenProduct_whenGetRequest_thenSetProductToAttribute() throws ServletException, IOException {
         Product product = new Product();
+        ProductHistory productHistory = new ProductHistory();
         long productId = product.getId();
         when(request.getPathInfo()).thenReturn("/" + productId);
         when(productService.getProductById(productId)).thenReturn(product);
         when(cartService.getCart(request)).thenReturn(new Cart());
+        when(productHistoryService.getProductHistory(request)).thenReturn(productHistory);
 
         servlet.doGet(request, response);
 
         verify(requestDispatcher).forward(request, response);
         verify(request).setAttribute(eq("product"), any());
+        verify(request).setAttribute(eq("viewedProducts"), any());
+        verify(request).setAttribute(eq("cart"), any());
     }
 
     @Test
@@ -116,7 +124,7 @@ public class ProductDetailsPageServletTest {
         when(request.getLocale()).thenReturn(Locale.US);
         when(request.getParameter("quantity")).thenReturn(String.valueOf(quantity));
         when(cartService.getCart(request)).thenReturn(cart);
-        doThrow(new OutOfStockException(0)).when(cartService).addProductToCart(cart, productId, quantity);
+        doThrow(new IllegalArgumentException()).when(cartService).addProductToCart(cart, productId, quantity);
 
         servlet.doPost(request, response);
 

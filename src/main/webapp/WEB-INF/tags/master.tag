@@ -1,7 +1,9 @@
 <%@ tag trimDirectiveWhitespaces="true" %>
 <%@ attribute name="pageTitle" required="true" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
-<style><%@ include file="/styles/main.css"%></style>
+<style>
+    <%@ include file="/styles/main.css" %>
+</style>
 
 <html>
 <head>
@@ -18,7 +20,6 @@
 </header>
 <main>
     <jsp:doBody/>
-    <tags:viewedProducts/>
 </main>
 </body>
 </html>
