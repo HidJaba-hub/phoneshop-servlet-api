@@ -11,11 +11,11 @@ public class SyncObjectPool {
     private static final ReentrantLock lock = new ReentrantLock();
     private static Integer lastObjectKey = 0;
 
-    public static Object getSyncObject(int idToCheck, Object poolObject) {
+    public static Object getSyncObject(int idToCheck) {
         if (!lock.isLocked()) {
             if (lock.tryLock()) {
                 try {
-                    syncObjects.putIfAbsent(idToCheck, poolObject);
+                    syncObjects.putIfAbsent(idToCheck, new Object());
                     if (lastObjectKey == 0) {
                         lastObjectKey = idToCheck;
                     }

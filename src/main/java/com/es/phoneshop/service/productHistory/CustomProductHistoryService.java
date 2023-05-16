@@ -24,8 +24,8 @@ public class CustomProductHistoryService implements ProductHistoryService {
     @Override
     public ProductHistory getProductHistory(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        session = (HttpSession) SyncObjectPool.getSyncObject(session.hashCode(), session);
-        synchronized (session) {
+        Object syncObject = SyncObjectPool.getSyncObject(session.hashCode());
+        synchronized (syncObject) {
             ProductHistory productHistory = (ProductHistory) session.getAttribute(VIEWED_PRODUCTS_SESSION_ATTRIBUTE);
             if (productHistory == null) {
                 request.getSession().setAttribute(VIEWED_PRODUCTS_SESSION_ATTRIBUTE, productHistory = new ProductHistory());
@@ -36,8 +36,8 @@ public class CustomProductHistoryService implements ProductHistoryService {
 
     @Override
     public void addViewedProduct(ProductHistory viewedProducts, Product product) {
-        viewedProducts = (ProductHistory) SyncObjectPool.getSyncObject(viewedProducts.hashCode(), viewedProducts);
-        synchronized (viewedProducts) {
+        Object syncObject = SyncObjectPool.getSyncObject(viewedProducts.hashCode());
+        synchronized (syncObject) {
             Deque<Product> viewedProductsDeque = viewedProducts.getRecentlyViewedProducts();
             if (findProductInDeque(viewedProductsDeque, product)) {
                 viewedProductsDeque.remove(product);

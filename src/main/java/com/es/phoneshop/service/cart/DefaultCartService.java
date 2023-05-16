@@ -27,9 +27,9 @@ public class DefaultCartService implements CartService {
 
     @Override
     public Cart getCart(HttpServletRequest request) {
-        HttpSession session = (HttpSession) SyncObjectPool.getSyncObject(request.hashCode(), request.getSession());
-        synchronized (session) {
-            Cart cart = (Cart) session.getAttribute(CART_SESSION_ATTRIBUTE);
+        Object syncObject = SyncObjectPool.getSyncObject(request.hashCode());
+        synchronized (syncObject) {
+            Cart cart = (Cart) request.getSession().getAttribute(CART_SESSION_ATTRIBUTE);
             if (cart == null) {
                 request.getSession().setAttribute(CART_SESSION_ATTRIBUTE, cart = new Cart());
             }
@@ -39,8 +39,8 @@ public class DefaultCartService implements CartService {
 
     @Override
     public void addProductToCart(Cart cart, Long productId, int quantity) throws OutOfStockException {
-        cart = (Cart) SyncObjectPool.getSyncObject(cart.hashCode(), cart);
-        synchronized (cart) {
+        Object syncObject = SyncObjectPool.getSyncObject(cart.hashCode());
+        synchronized (syncObject) {
             Product product = productService.getProductById(productId);
             Optional<CartItem> optionalCartItem = findCartItem(cart, product);
             int cartQuantity = optionalCartItem.map(CartItem::getQuantity).orElse(0);
