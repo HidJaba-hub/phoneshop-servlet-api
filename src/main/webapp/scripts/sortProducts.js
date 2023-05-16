@@ -5,7 +5,7 @@ $(document).ready(function () {
     const rowId = new Map(productsId.map((id, i) => [id, table.rows[i]]));
 
 
-    $('#productsTable thead tr td a').on('click', function(event) {
+    $('#productsTable thead tr td a').on('click', function (event) {
         event.preventDefault();
         var xmlHttpRequest = new XMLHttpRequest();
         xmlHttpRequest.onreadystatechange = function () {

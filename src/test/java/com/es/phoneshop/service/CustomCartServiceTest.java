@@ -98,7 +98,7 @@ public class CustomCartServiceTest {
         defaultCartService.addProductToCart(cart, productId, quantity);
     }
 
-    @Test(expected = OutOfStockException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void givenNegativeQuantity_whenAddProduct_thenGetException() throws OutOfStockException {
         long productId = product.getId();
         int quantity = -1;

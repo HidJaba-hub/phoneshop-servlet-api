@@ -24,19 +24,15 @@ public class CustomProductHistoryService implements ProductHistoryService {
     @Override
     public ProductHistory getProductHistory(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        Object syncObject = SyncObjectPool.getSyncObject(session.hashCode());
+        Object syncObject = SyncObjectPool.getSyncObject(session.getId());
         synchronized (syncObject) {
-            ProductHistory productHistory = (ProductHistory) session.getAttribute(VIEWED_PRODUCTS_SESSION_ATTRIBUTE);
-            if (productHistory == null) {
-                request.getSession().setAttribute(VIEWED_PRODUCTS_SESSION_ATTRIBUTE, productHistory = new ProductHistory());
-            }
-            return productHistory;
+            return (ProductHistory) session.getAttribute(VIEWED_PRODUCTS_SESSION_ATTRIBUTE);
         }
     }
 
     @Override
     public void addViewedProduct(ProductHistory viewedProducts, Product product) {
-        Object syncObject = SyncObjectPool.getSyncObject(viewedProducts.hashCode());
+        Object syncObject = SyncObjectPool.getSyncObject(viewedProducts.getId().toString());
         synchronized (syncObject) {
             Deque<Product> viewedProductsDeque = viewedProducts.getRecentlyViewedProducts();
             if (findProductInDeque(viewedProductsDeque, product)) {
@@ -54,6 +50,7 @@ public class CustomProductHistoryService implements ProductHistoryService {
     }
 
     private enum SingletonManager {
+
         INSTANCE;
         private static final CustomProductHistoryService singleton = new CustomProductHistoryService();
 

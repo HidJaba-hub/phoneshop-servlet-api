@@ -43,7 +43,6 @@ public class CustomProductHistoryTest {
         when(request.getSession().getAttribute(any())).thenReturn(productHistory);
 
         ProductHistory testProductHistory = productHistoryService.getProductHistory(request);
-        ;
 
         assertEquals(testProductHistory, productHistory);
     }

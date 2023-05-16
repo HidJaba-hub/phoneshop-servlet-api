@@ -9,9 +9,25 @@
         <param-name>insertDemoData</param-name>
         <param-value>true</param-value>
     </context-param>
+    <context-param>
+        <param-name>insertProductHistory</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>insertCart</param-name>
+        <param-value>true</param-value>
+    </context-param>
 
     <listener>
         <listener-class>com.es.phoneshop.web.listener.DemoDataServletContextListener</listener-class>
+    </listener>
+
+    <listener>
+        <listener-class>com.es.phoneshop.web.listener.CartSessionListener</listener-class>
+    </listener>
+
+    <listener>
+        <listener-class>com.es.phoneshop.web.listener.ProductHistorySessionListener</listener-class>
     </listener>
 
     <servlet>
@@ -43,21 +59,6 @@
         <servlet-name>product</servlet-name>
         <url-pattern>/products/*</url-pattern>
     </servlet-mapping>
-
-    <filter>
-        <filter-name>recentlyViewed</filter-name>
-        <filter-class>com.es.phoneshop.web.ViewedProductFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>recentlyViewed</filter-name>
-        <servlet-name>product</servlet-name>
-        <dispatcher>REQUEST</dispatcher>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>recentlyViewed</filter-name>
-        <servlet-name>productList</servlet-name>
-        <dispatcher>FORWARD</dispatcher>
-    </filter-mapping>
 
     <error-page>
         <location>/WEB-INF/pages/errorProductDefinitionException.jsp</location>
