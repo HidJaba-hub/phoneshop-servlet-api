@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.Deque;
 
 public class CustomProductHistoryService implements ProductHistoryService {
+
     private static final String VIEWED_PRODUCTS_SESSION_ATTRIBUTE = "viewedProducts";
     private static final int MAX_VIEWED_PRODUCTS = 4;
 
