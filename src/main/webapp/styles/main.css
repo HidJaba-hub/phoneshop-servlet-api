@@ -24,11 +24,18 @@ td {
     border: 1px solid gray;
     vertical-align: top;
 }
-
-.price {
+.error{
+    color: red;
+}
+.success{
+    color: green;
+}
+.price{
     text-align: right;
 }
-
+.quantity{
+    text-align: right;
+}
 img.product-tile {
     max-width: 64px;
 }
@@ -75,6 +82,22 @@ body.product-list {
     animation-iteration-count: 1;
 }
 
-.popup table, .popup td {
-    border: none;
+.popup table, .popup t{}
+
+.recently-viewed {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+.recently-viewed .recent-product {
+    width: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border: 1px solid #797979;
+    padding: 10px;
+}
+.recent-product-img {
+    width: 100px;
 }

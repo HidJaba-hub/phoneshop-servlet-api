@@ -2,8 +2,8 @@ package com.es.phoneshop.DAO;
 
 import com.es.phoneshop.SortField;
 import com.es.phoneshop.SortOrder;
-import com.es.phoneshop.StringChecker;
 import com.es.phoneshop.model.entity.Product;
+import com.es.phoneshop.utils.StringChecker;
 import org.apache.maven.shared.utils.StringUtils;
 
 import java.math.BigDecimal;

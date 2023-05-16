@@ -44,6 +44,21 @@
         <url-pattern>/products/*</url-pattern>
     </servlet-mapping>
 
+    <filter>
+        <filter-name>recentlyViewed</filter-name>
+        <filter-class>com.es.phoneshop.web.ViewedProductFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>recentlyViewed</filter-name>
+        <servlet-name>product</servlet-name>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>recentlyViewed</filter-name>
+        <servlet-name>productList</servlet-name>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+
     <error-page>
         <location>/WEB-INF/pages/errorProductDefinitionException.jsp</location>
         <exception-type>com.es.phoneshop.exception.ProductNotFoundException</exception-type>
