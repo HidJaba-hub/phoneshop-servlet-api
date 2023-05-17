@@ -6,7 +6,7 @@
 </style>
 
 <c:if test="${viewedProducts != null}">
-    <jsp:useBean id="viewedProducts" type="com.es.phoneshop.model.entity.ProductHistory" scope="session"/>
+    <jsp:useBean id="viewedProducts" type="com.es.phoneshop.model.entity.RecentlyViewedProducts" scope="session"/>
     <h2 style="text-align: center">Recently viewed</h2>
     <div class="recently-viewed">
         <c:if test="${not empty viewedProducts}">

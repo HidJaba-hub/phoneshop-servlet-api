@@ -15,7 +15,7 @@ import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ProductHistorySessionListenerTest {
+public class RecentlyViewedProductsSessionListenerTest {
 
     private static final String VIEWED_PRODUCTS_SESSION_ATTRIBUTE = "viewedProducts";
     @Mock

@@ -1,7 +1,7 @@
 package com.es.phoneshop.service.productHistory;
 
 import com.es.phoneshop.model.entity.Product;
-import com.es.phoneshop.model.entity.ProductHistory;
+import com.es.phoneshop.model.entity.RecentlyViewedProducts;
 import com.es.phoneshop.utils.SyncObjectPool;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -22,16 +22,16 @@ public class CustomProductHistoryService implements ProductHistoryService {
     }
 
     @Override
-    public ProductHistory getProductHistory(HttpServletRequest request) {
+    public RecentlyViewedProducts getRecentlyViewedProducts(HttpServletRequest request) {
         HttpSession session = request.getSession();
         Object syncObject = SyncObjectPool.getSyncObject(session.getId());
         synchronized (syncObject) {
-            return (ProductHistory) session.getAttribute(VIEWED_PRODUCTS_SESSION_ATTRIBUTE);
+            return (RecentlyViewedProducts) session.getAttribute(VIEWED_PRODUCTS_SESSION_ATTRIBUTE);
         }
     }
 
     @Override
-    public void addViewedProduct(ProductHistory viewedProducts, Product product) {
+    public void addRecentlyViewedProduct(RecentlyViewedProducts viewedProducts, Product product) {
         Object syncObject = SyncObjectPool.getSyncObject(viewedProducts.getId().toString());
         synchronized (syncObject) {
             Deque<Product> viewedProductsDeque = viewedProducts.getRecentlyViewedProducts();

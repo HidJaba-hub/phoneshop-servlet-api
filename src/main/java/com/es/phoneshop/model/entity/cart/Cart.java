@@ -2,11 +2,12 @@ package com.es.phoneshop.model.entity.cart;
 
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.UUID;
 
 @Getter
-public class Cart {
+public class Cart implements Serializable {
 
     private Long id;
     private LinkedHashSet<CartItem> items;

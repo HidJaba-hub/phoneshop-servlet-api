@@ -3,7 +3,7 @@ package com.es.phoneshop.web;
 import com.es.phoneshop.exception.OutOfStockException;
 import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.entity.Product;
-import com.es.phoneshop.model.entity.ProductHistory;
+import com.es.phoneshop.model.entity.RecentlyViewedProducts;
 import com.es.phoneshop.model.entity.cart.Cart;
 import com.es.phoneshop.service.ProductService;
 import com.es.phoneshop.service.cart.DefaultCartService;
@@ -13,6 +13,7 @@ import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,12 +52,15 @@ public class ProductDetailsPageServletTest {
     private ProductHistoryService productHistoryService;
     @Mock
     private ServletConfig config;
+    @Mock
+    private HttpSession session;
 
     @Before
     public void setup() throws ServletException {
         servlet.init(config);
         MockitoAnnotations.initMocks(this);
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
+        when(request.getSession()).thenReturn(session);
     }
 
     @Test(expected = ProductNotFoundException.class)
@@ -71,19 +75,19 @@ public class ProductDetailsPageServletTest {
     @Test
     public void givenProduct_whenGetRequest_thenSetProductToAttribute() throws ServletException, IOException {
         Product product = new Product();
-        ProductHistory productHistory = new ProductHistory();
+        RecentlyViewedProducts recentlyViewedProducts = new RecentlyViewedProducts();
         long productId = product.getId();
         when(request.getPathInfo()).thenReturn("/" + productId);
         when(productService.getProductById(productId)).thenReturn(product);
         when(cartService.getCart(request)).thenReturn(new Cart());
-        when(productHistoryService.getProductHistory(request)).thenReturn(productHistory);
+        when(productHistoryService.getRecentlyViewedProducts(request)).thenReturn(recentlyViewedProducts);
 
         servlet.doGet(request, response);
 
         verify(requestDispatcher).forward(request, response);
         verify(request).setAttribute(eq("product"), any());
-        verify(request).setAttribute(eq("viewedProducts"), any());
-        verify(request).setAttribute(eq("cart"), any());
+        verify(session).setAttribute(eq("viewedProducts"), any());
+        verify(session).setAttribute(eq("cart"), any());
     }
 
     @Test

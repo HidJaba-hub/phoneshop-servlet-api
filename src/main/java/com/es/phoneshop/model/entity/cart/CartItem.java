@@ -5,20 +5,25 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @AllArgsConstructor
 @Getter
 @Setter
-public class CartItem {
+public class CartItem implements Serializable {
 
     private Product product;
     private int quantity;
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof CartItem cartItem)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof CartItem cartItem)) {
+            return false;
+        }
         return Objects.equals(product, cartItem.product);
     }
 
