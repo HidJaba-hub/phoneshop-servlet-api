@@ -1,12 +1,12 @@
 package com.es.phoneshop.service.productHistory;
 
 import com.es.phoneshop.model.entity.Product;
-import com.es.phoneshop.model.entity.ProductHistory;
+import com.es.phoneshop.model.entity.RecentlyViewedProducts;
 import jakarta.servlet.http.HttpServletRequest;
 
 public interface ProductHistoryService {
 
-    ProductHistory getProductHistory(HttpServletRequest request);
+    RecentlyViewedProducts getRecentlyViewedProducts(HttpServletRequest request);
 
-    void addViewedProduct(ProductHistory viewedProducts, Product product);
+    void addViewedProduct(RecentlyViewedProducts viewedProducts, Product product);
 }
