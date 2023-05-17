@@ -15,8 +15,4 @@ public class OutOfStockException extends Exception {
         this.stockRequested = stockRequested;
         this.stockAvailable = stockAvailable;
     }
-
-    public OutOfStockException(int stockRequested) {
-        this.stockRequested = stockRequested;
-    }
 }

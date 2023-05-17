@@ -31,7 +31,7 @@ public class CustomProductHistoryService implements ProductHistoryService {
     }
 
     @Override
-    public void addViewedProduct(RecentlyViewedProducts viewedProducts, Product product) {
+    public void addRecentlyViewedProduct(RecentlyViewedProducts viewedProducts, Product product) {
         Object syncObject = SyncObjectPool.getSyncObject(viewedProducts.getId().toString());
         synchronized (syncObject) {
             Deque<Product> viewedProductsDeque = viewedProducts.getRecentlyViewedProducts();

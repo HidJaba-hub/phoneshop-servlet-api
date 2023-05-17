@@ -65,7 +65,6 @@ public class ProductDetailsPageServlet extends HttpServlet {
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Page not found");
         }
-
     }
 
     private void addProductToCart(HttpServletRequest request, HttpServletResponse response,
@@ -95,6 +94,6 @@ public class ProductDetailsPageServlet extends HttpServlet {
     private void fillRecentlyViewedProductList(HttpServletRequest request, long productId) {
         RecentlyViewedProducts recentlyViewedProducts = productHistoryService.getRecentlyViewedProducts(request);
         request.getSession().setAttribute("viewedProducts", productHistoryService.getRecentlyViewedProducts(request));
-        productHistoryService.addViewedProduct(recentlyViewedProducts, productService.getProductById(productId));
+        productHistoryService.addRecentlyViewedProduct(recentlyViewedProducts, productService.getProductById(productId));
     }
 }

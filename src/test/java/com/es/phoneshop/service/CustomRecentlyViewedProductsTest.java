@@ -52,7 +52,7 @@ public class CustomRecentlyViewedProductsTest {
         Product product = new Product();
         when(recentlyViewedProducts.getRecentlyViewedProducts()).thenReturn(productDeque);
 
-        productHistoryService.addViewedProduct(recentlyViewedProducts, product);
+        productHistoryService.addRecentlyViewedProduct(recentlyViewedProducts, product);
 
         verify(productDeque).addFirst(product);
     }
@@ -63,7 +63,7 @@ public class CustomRecentlyViewedProductsTest {
         when(productDeque.size()).thenReturn(4);
         when(recentlyViewedProducts.getRecentlyViewedProducts()).thenReturn(productDeque);
 
-        productHistoryService.addViewedProduct(recentlyViewedProducts, product);
+        productHistoryService.addRecentlyViewedProduct(recentlyViewedProducts, product);
 
         verify(productDeque).removeLast();
         verify(productDeque).addFirst(product);
@@ -75,7 +75,7 @@ public class CustomRecentlyViewedProductsTest {
         when(productDeque.contains(product)).thenReturn(true);
         when(recentlyViewedProducts.getRecentlyViewedProducts()).thenReturn(productDeque);
 
-        productHistoryService.addViewedProduct(recentlyViewedProducts, product);
+        productHistoryService.addRecentlyViewedProduct(recentlyViewedProducts, product);
 
         verify(productDeque).remove(product);
         verify(productDeque).addFirst(product);

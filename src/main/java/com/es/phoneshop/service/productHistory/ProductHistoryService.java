@@ -8,5 +8,5 @@ public interface ProductHistoryService {
 
     RecentlyViewedProducts getRecentlyViewedProducts(HttpServletRequest request);
 
-    void addViewedProduct(RecentlyViewedProducts viewedProducts, Product product);
+    void addRecentlyViewedProduct(RecentlyViewedProducts viewedProducts, Product product);
 }
