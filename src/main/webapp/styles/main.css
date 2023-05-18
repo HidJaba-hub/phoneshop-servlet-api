@@ -25,7 +25,19 @@ td {
     vertical-align: top;
 }
 
+.error {
+    color: red;
+}
+
+.success {
+    color: green;
+}
+
 .price {
+    text-align: right;
+}
+
+.quantity {
     text-align: right;
 }
 
@@ -39,7 +51,7 @@ body.product-list {
 }
 
 
-@keyframes trans{
+@keyframes trans {
     0% {
         opacity: 0;
     }
@@ -75,6 +87,26 @@ body.product-list {
     animation-iteration-count: 1;
 }
 
-.popup table, .popup td {
+.popup table, .popup t {
     border: none;
+}
+
+.recently-viewed {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.recently-viewed .recent-product {
+    width: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border: 1px solid #797979;
+    padding: 10px;
+}
+
+.recent-product-img {
+    width: 100px;
 }

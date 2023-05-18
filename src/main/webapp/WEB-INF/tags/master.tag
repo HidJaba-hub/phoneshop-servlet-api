@@ -1,5 +1,9 @@
 <%@ tag trimDirectiveWhitespaces="true" %>
 <%@ attribute name="pageTitle" required="true" %>
+<%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
+<style>
+    <%@ include file="/styles/main.css" %>
+</style>
 
 <html>
 <head>

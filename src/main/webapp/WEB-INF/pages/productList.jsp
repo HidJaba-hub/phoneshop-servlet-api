@@ -53,6 +53,7 @@
             </tr>
         </c:forEach>
     </table>
+    <tags:viewedProducts/>
 </tags:master>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="${pageContext.servletContext.contextPath}/scripts/sortProducts.js"></script>

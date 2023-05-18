@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.Date;
@@ -13,7 +14,7 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @EqualsAndHashCode
-public class PriceHistory {
+public class PriceHistory implements Serializable {
 
     private Date date;
     private Currency currency;

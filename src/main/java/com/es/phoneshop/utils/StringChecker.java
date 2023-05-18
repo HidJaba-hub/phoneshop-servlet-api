@@ -1,4 +1,4 @@
-package com.es.phoneshop;
+package com.es.phoneshop.utils;
 
 import org.apache.maven.shared.utils.StringUtils;
 
