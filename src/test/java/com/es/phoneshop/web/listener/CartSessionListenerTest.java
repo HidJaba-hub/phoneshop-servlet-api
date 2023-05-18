@@ -1,7 +1,6 @@
 package com.es.phoneshop.web.listener;
 
 import com.es.phoneshop.model.entity.cart.Cart;
-import com.es.phoneshop.service.cart.DefaultCartService;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpSessionEvent;
@@ -13,13 +12,13 @@ import org.mockito.MockitoAnnotations;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class CartSessionListenerTest {
 
-    private static final String CART_SESSION_ATTRIBUTE = DefaultCartService.class.getName() + "cart";
+    private static final String CART_SESSION_ATTRIBUTE = "cart";
     @Mock
     private HttpSessionEvent sessionEvent;
     @Mock
@@ -56,6 +55,6 @@ public class CartSessionListenerTest {
 
         cartSessionListener.sessionCreated(sessionEvent);
 
-        verify(session, atLeast(0)).setAttribute(any(), any());
+        verify(session, never()).setAttribute(any(), any());
     }
 }

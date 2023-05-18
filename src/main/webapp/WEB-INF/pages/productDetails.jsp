@@ -51,7 +51,7 @@
             <tr>
                 <td>Quantity</td>
                 <td>
-                    <input type="number" class="quantity" name="quantity" value="${not empty param.error ? param.quantity : 1}">
+                    <input type="number" class="quantity" name="quantity" value="${not empty param.error ? param.errorQuantity : 1}">
                     <c:if test="${not empty param.error}">
                         <div class="error">
                                 ${param.error}

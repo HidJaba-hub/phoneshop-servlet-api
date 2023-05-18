@@ -60,7 +60,7 @@ public class CustomCartServiceTest {
 
         Cart testCart = defaultCartService.getCart(request);
 
-        assertEquals(testCart, cart);
+        assertEquals(cart, testCart);
     }
 
     @Test

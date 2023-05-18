@@ -13,7 +13,6 @@ import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,15 +51,12 @@ public class ProductDetailsPageServletTest {
     private ProductHistoryService productHistoryService;
     @Mock
     private ServletConfig config;
-    @Mock
-    private HttpSession session;
 
     @Before
     public void setup() throws ServletException {
         servlet.init(config);
         MockitoAnnotations.initMocks(this);
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
-        when(request.getSession()).thenReturn(session);
     }
 
     @Test(expected = ProductNotFoundException.class)
@@ -79,15 +75,12 @@ public class ProductDetailsPageServletTest {
         long productId = product.getId();
         when(request.getPathInfo()).thenReturn("/" + productId);
         when(productService.getProductById(productId)).thenReturn(product);
-        when(cartService.getCart(request)).thenReturn(new Cart());
         when(productHistoryService.getRecentlyViewedProducts(request)).thenReturn(recentlyViewedProducts);
 
         servlet.doGet(request, response);
 
         verify(requestDispatcher).forward(request, response);
         verify(request).setAttribute(eq("product"), any());
-        verify(session).setAttribute(eq("viewedProducts"), any());
-        verify(session).setAttribute(eq("cart"), any());
     }
 
     @Test
@@ -133,7 +126,8 @@ public class ProductDetailsPageServletTest {
         servlet.doPost(request, response);
 
         verify(cartService).addProductToCart(cart, productId, -1);
-        verify(response).sendRedirect(request.getContextPath() + "/products/" + productId + "?error=" + errorString);
+        verify(response).sendRedirect(request.getContextPath() + "/products/" + productId + "?error=" + errorString
+                + "&errorQuantity=" + quantity);
     }
 
     @Test
@@ -152,7 +146,8 @@ public class ProductDetailsPageServletTest {
         servlet.doPost(request, response);
 
         verify(cartService).addProductToCart(cart, productId, quantity);
-        verify(response).sendRedirect(request.getContextPath() + "/products/" + productId + "?error=" + "Out of stock, available " + availableQuantity);
+        verify(response).sendRedirect(request.getContextPath() + "/products/" + productId +
+                "?error=" + "Out of stock, available " + availableQuantity + "&errorQuantity=" + quantity);
     }
 
     @Test

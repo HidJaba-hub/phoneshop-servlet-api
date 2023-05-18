@@ -44,7 +44,7 @@ public class CustomRecentlyViewedProductsTest {
 
         RecentlyViewedProducts testRecentlyViewedProducts = productHistoryService.getRecentlyViewedProducts(request);
 
-        assertEquals(testRecentlyViewedProducts, recentlyViewedProducts);
+        assertEquals(recentlyViewedProducts, testRecentlyViewedProducts);
     }
 
     @Test

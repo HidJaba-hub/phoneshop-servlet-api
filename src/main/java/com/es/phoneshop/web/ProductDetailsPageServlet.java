@@ -40,7 +40,6 @@ public class ProductDetailsPageServlet extends HttpServlet {
             {
                 long productId = Long.valueOf(request.getPathInfo().substring(1));
                 request.setAttribute("product", productService.getProductById(productId));
-                request.getSession().setAttribute("cart", cartService.getCart(request));
                 fillRecentlyViewedProductList(request, productId);
             }
             request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
@@ -75,11 +74,13 @@ public class ProductDetailsPageServlet extends HttpServlet {
             cartService.addProductToCart(cart, productId, quantity);
         } catch (OutOfStockException e) {
             errorString = "Out of stock, available " + e.getStockAvailable();
-            response.sendRedirect(request.getContextPath() + "/products/" + productId + "?error=" + errorString);
+            response.sendRedirect(request.getContextPath() + "/products/" +
+                    productId + "?error=" + errorString + "&errorQuantity=" + quantity);
             return;
         } catch (IllegalArgumentException e) {
             errorString = "Wrong amount of products";
-            response.sendRedirect(request.getContextPath() + "/products/" + productId + "?error=" + errorString);
+            response.sendRedirect(request.getContextPath() + "/products/" +
+                    productId + "?error=" + errorString + "&errorQuantity=" + quantity);
             return;
         }
         response.sendRedirect(request.getContextPath() + "/products/" + productId + "?message=Product added to cart");
@@ -93,7 +94,6 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     private void fillRecentlyViewedProductList(HttpServletRequest request, long productId) {
         RecentlyViewedProducts recentlyViewedProducts = productHistoryService.getRecentlyViewedProducts(request);
-        request.getSession().setAttribute("viewedProducts", productHistoryService.getRecentlyViewedProducts(request));
         productHistoryService.addRecentlyViewedProduct(recentlyViewedProducts, productService.getProductById(productId));
     }
 }

@@ -11,7 +11,7 @@ import org.mockito.MockitoAnnotations;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -52,6 +52,6 @@ public class RecentlyViewedProductsSessionListenerTest {
 
         productHistorySessionListener.sessionCreated(sessionEvent);
 
-        verify(session, atLeast(0)).setAttribute(any(), any());
+        verify(session, never()).setAttribute(any(), any());
     }
 }
