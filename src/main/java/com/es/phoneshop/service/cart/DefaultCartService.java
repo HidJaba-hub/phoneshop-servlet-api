@@ -1,6 +1,8 @@
 package com.es.phoneshop.service.cart;
 
 import com.es.phoneshop.exception.OutOfStockException;
+import com.es.phoneshop.exception.ProductNotFoundException;
+import com.es.phoneshop.exception.SameArgumentException;
 import com.es.phoneshop.model.entity.Product;
 import com.es.phoneshop.model.entity.cart.Cart;
 import com.es.phoneshop.model.entity.cart.CartItem;
@@ -10,6 +12,7 @@ import com.es.phoneshop.utils.SyncObjectPool;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 public class DefaultCartService implements CartService {
@@ -48,7 +51,57 @@ public class DefaultCartService implements CartService {
             } else {
                 cart.getItems().add(new CartItem(product, quantity));
             }
+            recalculateCart(cart);
         }
+    }
+
+    @Override
+    public void updateProductInCart(Cart cart, Long productId, int quantity) throws OutOfStockException, ProductNotFoundException {
+        Object syncObject = SyncObjectPool.getSyncObject(cart.getId().toString());
+        synchronized (syncObject) {
+            Product product = productService.getProductById(productId);
+            Optional<CartItem> optionalCartItem = findCartItem(cart, product);
+            checkQuantity(product, quantity, 0);
+
+            if (optionalCartItem.isPresent()) {
+                if (optionalCartItem.get().getQuantity() == quantity) {
+                    throw new SameArgumentException(optionalCartItem.get());
+                    //it is for resource economy: if the quantity is the same there is no sense to waste our resources
+                } else {
+                    optionalCartItem.get().setQuantity(quantity);
+                    recalculateCart(cart);
+                }
+            } else {
+                throw new ProductNotFoundException(productId, "Product wasn't found in cart");
+            }
+        }
+    }
+
+    @Override
+    public void deleteProductInCart(Cart cart, Long productId) throws ProductNotFoundException {
+        boolean isDeleted;
+        Object syncObject = SyncObjectPool.getSyncObject(cart.getId().toString());
+        synchronized (syncObject) {
+            isDeleted = cart.getItems().removeIf(cartItem ->
+                    productId.equals(cartItem.getProduct().getId()));
+        }
+        if (isDeleted) {
+            recalculateCart(cart);
+        } else {
+            throw new ProductNotFoundException(productId, "Product wasn't found in cart");
+        }
+    }
+
+    private void recalculateCart(Cart cart) {
+        cart.setTotalQuantity(cart.getItems().stream()
+                .map(CartItem::getQuantity)
+                .mapToInt(cartItem -> cartItem)
+                .sum());
+
+        cart.setTotalPrice(BigDecimal.valueOf(cart.getItems().stream()
+                .mapToInt(item -> item.getProduct().getPrice().intValueExact() * item.getQuantity())
+                .sum()
+        ));
     }
 
     private Optional<CartItem> findCartItem(Cart cart, Product product) {

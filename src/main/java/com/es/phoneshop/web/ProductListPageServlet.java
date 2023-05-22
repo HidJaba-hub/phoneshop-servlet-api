@@ -2,6 +2,7 @@ package com.es.phoneshop.web;
 
 import com.es.phoneshop.service.CustomProductService;
 import com.es.phoneshop.service.ProductService;
+import com.es.phoneshop.service.cart.CartService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -14,6 +15,7 @@ import java.io.IOException;
 public class ProductListPageServlet extends HttpServlet {
 
     private ProductService productService;
+    private CartService cartService;
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {

@@ -4,7 +4,7 @@ import com.es.phoneshop.model.entity.Product;
 import com.es.phoneshop.model.entity.RecentlyViewedProducts;
 import jakarta.servlet.http.HttpServletRequest;
 
-public interface ProductHistoryService {
+public interface RecentlyViewedProductsService {
 
     RecentlyViewedProducts getRecentlyViewedProducts(HttpServletRequest request);
 
