@@ -7,7 +7,7 @@ import com.es.phoneshop.model.entity.RecentlyViewedProducts;
 import com.es.phoneshop.model.entity.cart.Cart;
 import com.es.phoneshop.service.ProductService;
 import com.es.phoneshop.service.cart.DefaultCartService;
-import com.es.phoneshop.service.productHistory.ProductHistoryService;
+import com.es.phoneshop.service.productHistory.RecentlyViewedProductsService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -48,7 +48,7 @@ public class ProductDetailsPageServletTest {
     @Mock
     private DefaultCartService cartService;
     @Mock
-    private ProductHistoryService productHistoryService;
+    private RecentlyViewedProductsService recentlyViewedProductsService;
     @Mock
     private ServletConfig config;
 
@@ -75,7 +75,7 @@ public class ProductDetailsPageServletTest {
         long productId = product.getId();
         when(request.getPathInfo()).thenReturn("/" + productId);
         when(productService.getProductById(productId)).thenReturn(product);
-        when(productHistoryService.getRecentlyViewedProducts(request)).thenReturn(recentlyViewedProducts);
+        when(recentlyViewedProductsService.getRecentlyViewedProducts(request)).thenReturn(recentlyViewedProducts);
 
         servlet.doGet(request, response);
 
@@ -112,7 +112,7 @@ public class ProductDetailsPageServletTest {
     }
 
     @Test
-    public void givenNegativeQuantity_whenDoPost_thenVerifySendErrorRedirect() throws ServletException, IOException, OutOfStockException {
+    public void givenNegativeQuantity_whenDoPost_thenVerifySendErrorRedirect() throws IOException, OutOfStockException {
         long productId = -1;
         int quantity = -1;
         String errorString = "Wrong amount of products";

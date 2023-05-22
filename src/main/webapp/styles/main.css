@@ -1,13 +1,18 @@
-header {
+header, footer {
     background-color: aquamarine;
     font: 400 70px/1.3 'Lobster Two', Helvetica, sans-serif;
     color: #2b2b2b;
     text-shadow: 1px 1px 0px #ededed, 4px 4px 0px rgba(0, 0, 0, 0.15);
+}
 
+header {
+    display: flex;
+    justify-content: space-between;
 }
 
 header a:link {
     text-decoration: none;
+    display: inherit;
 }
 
 header img {
@@ -73,12 +78,12 @@ body.product-list {
     position: fixed;
     width: fit-content;
     height: fit-content;
-    left: 500px;
+    left: 700px;
     right: 0;
     top: 200px;
     bottom: 0;
     margin: 0;
-    border: none;
+    border: 1px solid gray;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
     padding: 30px;
     transition: all;
@@ -87,7 +92,7 @@ body.product-list {
     animation-iteration-count: 1;
 }
 
-.popup table, .popup t {
+.popup table, .popup td {
     border: none;
 }
 

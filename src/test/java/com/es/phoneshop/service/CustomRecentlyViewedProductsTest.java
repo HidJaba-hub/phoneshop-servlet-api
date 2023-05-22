@@ -2,7 +2,7 @@ package com.es.phoneshop.service;
 
 import com.es.phoneshop.model.entity.Product;
 import com.es.phoneshop.model.entity.RecentlyViewedProducts;
-import com.es.phoneshop.service.productHistory.CustomProductHistoryService;
+import com.es.phoneshop.service.productHistory.CustomRecentlyViewedProductsService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.junit.Before;
@@ -29,11 +29,11 @@ public class CustomRecentlyViewedProductsTest {
     @Mock
     private Deque<Product> productDeque;
     @InjectMocks
-    private CustomProductHistoryService productHistoryService;
+    private CustomRecentlyViewedProductsService productHistoryService;
 
     @Before
     public void setup() {
-        productHistoryService = CustomProductHistoryService.getInstance();
+        productHistoryService = CustomRecentlyViewedProductsService.getInstance();
         MockitoAnnotations.initMocks(this);
     }
 

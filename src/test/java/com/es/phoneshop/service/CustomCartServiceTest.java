@@ -1,6 +1,8 @@
 package com.es.phoneshop.service;
 
 import com.es.phoneshop.exception.OutOfStockException;
+import com.es.phoneshop.exception.ProductNotFoundException;
+import com.es.phoneshop.exception.SameArgumentException;
 import com.es.phoneshop.model.entity.Product;
 import com.es.phoneshop.model.entity.cart.Cart;
 import com.es.phoneshop.model.entity.cart.CartItem;
@@ -13,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashSet;
 
 import static org.junit.Assert.assertEquals;
@@ -69,10 +72,11 @@ public class CustomCartServiceTest {
         int quantity = 10;
         when(product.getStock()).thenReturn(100);
         when(productService.getProductById(productId)).thenReturn(product);
+        when(product.getPrice()).thenReturn(new BigDecimal(1));
 
         defaultCartService.addProductToCart(cart, productId, quantity);
 
-        verify(cartItem).setQuantity(quantity + cartItem.getQuantity());
+        verify(cartItem, atLeast(1)).setQuantity(quantity + cartItem.getQuantity());
     }
 
     @Test
@@ -82,6 +86,7 @@ public class CustomCartServiceTest {
         cartItems.remove(cartItem);
         when(product.getStock()).thenReturn(100);
         when(productService.getProductById(productId)).thenReturn(product);
+        when(product.getPrice()).thenReturn(new BigDecimal(1));
 
         defaultCartService.addProductToCart(cart, productId, quantity);
 
@@ -106,5 +111,59 @@ public class CustomCartServiceTest {
         when(productService.getProductById(productId)).thenReturn(product);
 
         defaultCartService.addProductToCart(cart, productId, quantity);
+    }
+
+    @Test
+    public void givenProduct_whenUpdateProduct_thenUpdateProduct() throws OutOfStockException {
+        long productId = product.getId();
+        int quantity = 1;
+        when(product.getStock()).thenReturn(100);
+        when(productService.getProductById(productId)).thenReturn(product);
+        when(product.getPrice()).thenReturn(new BigDecimal(1));
+
+        defaultCartService.updateProductInCart(cart, productId, quantity);
+
+        verify(cartItem, atLeast(1)).setQuantity(quantity + cartItem.getQuantity());
+    }
+
+    @Test(expected = SameArgumentException.class)
+    public void givenProductWithSameQuantity_whenUpdateProduct_thenGetException() throws OutOfStockException {
+        long productId = product.getId();
+        int quantity = 1;
+        when(product.getStock()).thenReturn(100);
+        when(productService.getProductById(productId)).thenReturn(product);
+        when(product.getPrice()).thenReturn(new BigDecimal(1));
+        when(cartItem.getQuantity()).thenReturn(quantity);
+
+        defaultCartService.updateProductInCart(cart, productId, quantity);
+    }
+
+    @Test(expected = ProductNotFoundException.class)
+    public void givenDefunctProduct_whenUpdateProduct_thenGetException() throws OutOfStockException {
+        long productId = product.getId();
+        int quantity = 1;
+        cartItems.remove(cartItem);
+        when(product.getStock()).thenReturn(100);
+        when(productService.getProductById(productId)).thenReturn(product);
+        when(product.getPrice()).thenReturn(new BigDecimal(1));
+
+        defaultCartService.updateProductInCart(cart, productId, quantity);
+    }
+
+    @Test(expected = ProductNotFoundException.class)
+    public void givenDefunctProduct_whenDeleteProduct_thenGetException() {
+        long productId = product.getId();
+        cartItems.remove(cartItem);
+
+        defaultCartService.deleteProductInCart(cart, productId);
+    }
+
+    @Test
+    public void givenProduct_whenDeleteProduct_thenDeleteProduct() {
+        long productId = product.getId();
+
+        defaultCartService.deleteProductInCart(cart, productId);
+
+        verify(cart, atLeast(3)).getItems();
     }
 }

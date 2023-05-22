@@ -6,9 +6,12 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpSessionEvent;
 import jakarta.servlet.http.HttpSessionListener;
 
+import java.util.Currency;
+
 public class CartSessionListener implements HttpSessionListener {
 
     private static final String CART_SESSION_ATTRIBUTE = "cart";
+    private final Currency usd = Currency.getInstance("USD");
 
     @Override
     public void sessionCreated(HttpSessionEvent sessionEvent) {
@@ -19,6 +22,7 @@ public class CartSessionListener implements HttpSessionListener {
 
         if (insertCart) {
             Cart cart = new Cart();
+            cart.setCurrency(usd);
             session.setAttribute(CART_SESSION_ATTRIBUTE, cart);
         }
     }
