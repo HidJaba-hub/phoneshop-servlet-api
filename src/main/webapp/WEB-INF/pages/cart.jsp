@@ -4,6 +4,7 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
 <jsp:useBean id="cart" type="com.es.phoneshop.model.entity.cart.Cart" scope="session"/>
+<c:set var="servletContextPath" value="${pageContext.servletContext.contextPath}"/>
 <tags:master pageTitle="Cart">
     <p>
         Cart: ${cart}
@@ -18,7 +19,7 @@
             An error occurred when adding a product to the cart
         </div>
     </c:if>
-    <form method="post" action="${pageContext.servletContext.contextPath}/cart">
+    <form method="post" action="${servletContextPath}/cart">
         <table>
             <thead>
             <tr>
@@ -35,7 +36,7 @@
                         <img class="product-tile" src="${product.imageUrl}">
                     </td>
                     <td>
-                        <a href="${pageContext.servletContext.contextPath}/products/${product.id}">${product.description}</a>
+                        <a href="${servletContextPath}/products/${product.id}">${product.description}</a>
                     </td>
                     <td class="quantity">
                         <fmt:formatNumber value="${item.quantity}" var="quantity"/>
@@ -60,7 +61,7 @@
                     </td>
                     <td>
                         <button form="deleteCartItem"
-                                formaction="${pageContext.servletContext.contextPath}/cart/deleteCartItem/${product.id}">
+                                formaction="${servletContextPath}/cart/deleteCartItem/${product.id}">
                             Delete
                         </button>
                     </td>
@@ -89,4 +90,4 @@
     <form id="deleteCartItem" method="post">
     </form>
 </tags:master>
-<script src="${pageContext.servletContext.contextPath}/scripts/showHid.js"></script>
+<script src="${servletContextPath}/scripts/showHid.js"></script>

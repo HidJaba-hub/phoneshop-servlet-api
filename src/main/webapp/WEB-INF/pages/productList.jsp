@@ -11,6 +11,7 @@
     request.setAttribute("json", json);
 %>
 <tags:master pageTitle="Product List">
+    <c:set var="servletContextPath" value="${pageContext.servletContext.contextPath}"/>
     <input type="hidden" id="products" value='${json}'>
     <p>
         Welcome to Expert-Soft training!
@@ -56,12 +57,12 @@
         <c:set var="productId" value="${product.id}"/>
         <tr>
             <input type="hidden" name="path"
-                   value="${pageContext.servletContext.contextPath}/products?query=${param.query}">
+                   value="${servletContextPath}/products?query=${param.query}">
             <td>
                 <img class="product-tile" src="${product.imageUrl}">
             </td>
             <td>
-                <a href="${pageContext.servletContext.contextPath}/products/${productId}">${product.description}</a>
+                <a href="${servletContextPath}/products/${productId}">${product.description}</a>
             </td>
             <td>
                 <c:set var="error" value="${errors[productId]}"/>
@@ -84,7 +85,7 @@
                 </div>
             </td>
             <td>
-                <button formaction="${pageContext.servletContext.contextPath}/cart/addToCart/${productId}">
+                <button formaction="${servletContextPath}/cart/addToCart/${productId}">
                     Add to cart
                 </button>
             </td>
@@ -94,5 +95,5 @@
     </table>
 </tags:master>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="${pageContext.servletContext.contextPath}/scripts/sortProducts.js"></script>
-<script src="${pageContext.servletContext.contextPath}/scripts/showHid.js"></script>
+<script src="${servletContextPath}/scripts/sortProducts.js"></script>
+<script src="${servletContextPath}/scripts/showHid.js"></script>
