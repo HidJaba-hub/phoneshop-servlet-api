@@ -1,6 +1,5 @@
 package com.es.phoneshop.web.cart;
 
-import com.es.phoneshop.utils.ParseValidator;
 import com.es.phoneshop.utils.ReferenceTool;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,16 +33,17 @@ public class CartPageServlet extends CartItemServlet {
 
             int quantity;
             try {
-                if (ParseValidator.validateQuantity(quantities[i])) {
+                quantityParseValidator.validate(quantities[i], errors, productId);
+                if (!errors.containsKey(productId)) {
                     quantity = parseQuantity(quantities[i], request);
                 } else {
-                    throw new ParseException(quantities[i], 0);
+                    continue;
                 }
             } catch (ParseException exception) {
                 errors.put(productId, "Not a number");
                 continue;
             }
-            updateProductToCart(request, productId, quantity, errors, sameQuantityCount);
+            updateProduct(request, productId, quantity, errors, sameQuantityCount);
         }
         if (errors.isEmpty() && sameQuantityCount.get() != productIds.length) {
             response.sendRedirect(request.getContextPath() + "/cart?message=Cart updated successfully");

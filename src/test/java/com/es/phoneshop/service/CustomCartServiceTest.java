@@ -2,11 +2,11 @@ package com.es.phoneshop.service;
 
 import com.es.phoneshop.exception.OutOfStockException;
 import com.es.phoneshop.exception.ProductNotFoundException;
-import com.es.phoneshop.exception.SameArgumentException;
 import com.es.phoneshop.model.entity.Product;
 import com.es.phoneshop.model.entity.cart.Cart;
 import com.es.phoneshop.model.entity.cart.CartItem;
 import com.es.phoneshop.service.cart.DefaultCartService;
+import com.es.phoneshop.utils.ReferenceTool;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.junit.Before;
@@ -74,7 +74,7 @@ public class CustomCartServiceTest {
         when(productService.getProductById(productId)).thenReturn(product);
         when(product.getPrice()).thenReturn(new BigDecimal(1));
 
-        defaultCartService.addProductToCart(cart, productId, quantity);
+        defaultCartService.addCartItem(cart, productId, quantity);
 
         verify(cartItem, atLeast(1)).setQuantity(quantity + cartItem.getQuantity());
     }
@@ -88,7 +88,7 @@ public class CustomCartServiceTest {
         when(productService.getProductById(productId)).thenReturn(product);
         when(product.getPrice()).thenReturn(new BigDecimal(1));
 
-        defaultCartService.addProductToCart(cart, productId, quantity);
+        defaultCartService.addCartItem(cart, productId, quantity);
 
         verify(cart, atLeast(2)).getItems();
     }
@@ -100,7 +100,7 @@ public class CustomCartServiceTest {
         when(product.getStock()).thenReturn(10);
         when(productService.getProductById(productId)).thenReturn(product);
 
-        defaultCartService.addProductToCart(cart, productId, quantity);
+        defaultCartService.addCartItem(cart, productId, quantity);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -110,7 +110,7 @@ public class CustomCartServiceTest {
         when(product.getStock()).thenReturn(10);
         when(productService.getProductById(productId)).thenReturn(product);
 
-        defaultCartService.addProductToCart(cart, productId, quantity);
+        defaultCartService.addCartItem(cart, productId, quantity);
     }
 
     @Test
@@ -121,21 +121,9 @@ public class CustomCartServiceTest {
         when(productService.getProductById(productId)).thenReturn(product);
         when(product.getPrice()).thenReturn(new BigDecimal(1));
 
-        defaultCartService.updateProductInCart(cart, productId, quantity);
+        defaultCartService.updateCartItem(cart, productId, quantity, new ReferenceTool<>(0));
 
         verify(cartItem, atLeast(1)).setQuantity(quantity + cartItem.getQuantity());
-    }
-
-    @Test(expected = SameArgumentException.class)
-    public void givenProductWithSameQuantity_whenUpdateProduct_thenGetException() throws OutOfStockException {
-        long productId = product.getId();
-        int quantity = 1;
-        when(product.getStock()).thenReturn(100);
-        when(productService.getProductById(productId)).thenReturn(product);
-        when(product.getPrice()).thenReturn(new BigDecimal(1));
-        when(cartItem.getQuantity()).thenReturn(quantity);
-
-        defaultCartService.updateProductInCart(cart, productId, quantity);
     }
 
     @Test(expected = ProductNotFoundException.class)
@@ -147,7 +135,7 @@ public class CustomCartServiceTest {
         when(productService.getProductById(productId)).thenReturn(product);
         when(product.getPrice()).thenReturn(new BigDecimal(1));
 
-        defaultCartService.updateProductInCart(cart, productId, quantity);
+        defaultCartService.updateCartItem(cart, productId, quantity, new ReferenceTool<>(0));
     }
 
     @Test(expected = ProductNotFoundException.class)
@@ -155,14 +143,14 @@ public class CustomCartServiceTest {
         long productId = product.getId();
         cartItems.remove(cartItem);
 
-        defaultCartService.deleteProductInCart(cart, productId);
+        defaultCartService.deleteCartItem(cart, productId);
     }
 
     @Test
     public void givenProduct_whenDeleteProduct_thenDeleteProduct() {
         long productId = product.getId();
 
-        defaultCartService.deleteProductInCart(cart, productId);
+        defaultCartService.deleteCartItem(cart, productId);
 
         verify(cart, atLeast(3)).getItems();
     }

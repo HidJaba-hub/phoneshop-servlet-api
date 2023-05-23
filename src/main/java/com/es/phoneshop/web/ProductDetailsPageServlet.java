@@ -52,13 +52,20 @@ public class ProductDetailsPageServlet extends CartItemServlet {
 
             int quantity;
             try {
-                quantity = parseQuantity(quantityStr, request);
+                quantityParseValidator.validate(quantityStr, errors, productId);
+                if (errors.isEmpty()) {
+                    quantity = parseQuantity(quantityStr, request);
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/products/" + productId +
+                            "?error=" + errors.get(productId));
+                    return;
+                }
             } catch (ParseException exception) {
                 response.sendRedirect(request.getContextPath() + "/products/" + productId +
                         "?error=" + "Not a number");
                 return;
             }
-            addProductToCart(request, productId, quantity, errors);
+            addProduct(request, productId, quantity, errors);
             if (errors.isEmpty()) {
                 response.sendRedirect(request.getContextPath() + "/products/" + productId +
                         "?message=Product added to cart");

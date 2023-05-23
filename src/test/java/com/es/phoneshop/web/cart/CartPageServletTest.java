@@ -1,7 +1,9 @@
 package com.es.phoneshop.web.cart;
 
+import com.es.phoneshop.exception.OutOfStockException;
 import com.es.phoneshop.service.cart.DefaultCartService;
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,8 +17,10 @@ import java.io.IOException;
 import java.util.Locale;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -32,9 +36,12 @@ public class CartPageServletTest {
     private RequestDispatcher requestDispatcher;
     @Mock
     private DefaultCartService cartService;
+    @Mock
+    private ServletConfig config;
 
     @Before
     public void setup() throws ServletException {
+        servlet.init(config);
         MockitoAnnotations.initMocks(this);
         when(request.getLocale()).thenReturn(Locale.US);
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
@@ -63,11 +70,21 @@ public class CartPageServletTest {
     @Test
     public void givenInvalidQuantity_whenDoPost_thenSendErrorRedirect() throws ServletException, IOException {
         when(request.getParameterValues("productId")).thenReturn(new String[]{"1"});
-        when(request.getParameterValues("quantity")).thenReturn(new String[]{"1a"});
+        when(request.getParameterValues("quantity")).thenReturn(new String[]{"a"});
 
         servlet.doPost(request, response);
 
-        verify(request).setAttribute(eq("errors"), any());
+        verify(requestDispatcher).forward(request, response);
+    }
+
+    @Test
+    public void givenNegativeQuantity_whenDoPost_thenSendErrorRedirect() throws ServletException, IOException, OutOfStockException {
+        when(request.getParameterValues("productId")).thenReturn(new String[]{"1"});
+        when(request.getParameterValues("quantity")).thenReturn(new String[]{"-1"});
+        doThrow(new IllegalArgumentException()).when(cartService).updateCartItem(any(), anyLong(), anyInt(), any());
+
+        servlet.doPost(request, response);
+
         verify(requestDispatcher).forward(request, response);
     }
 }

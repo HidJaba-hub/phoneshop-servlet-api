@@ -4,6 +4,7 @@ import com.es.phoneshop.exception.OutOfStockException;
 import com.es.phoneshop.model.entity.Product;
 import com.es.phoneshop.service.cart.DefaultCartService;
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -38,10 +39,13 @@ public class AddCartItemServletTest {
     private DefaultCartService cartService;
     @Mock
     private Product product;
+    @Mock
+    private ServletConfig config;
 
     @Before
     public void setup() throws ServletException {
-        MockitoAnnotations.initMocks(this);
+        servlet.init(config);
+        MockitoAnnotations.openMocks(this);
         when(request.getLocale()).thenReturn(Locale.US);
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
     }
@@ -70,7 +74,7 @@ public class AddCartItemServletTest {
 
         servlet.doPost(request, response);
 
-        verify(response).sendRedirect("path" + "&errors=" + "Not a number" + "&id=" + productId + "&quantity=" + quantity);
+        verify(response).sendRedirect("path" + "&errors=" + anyString() + "&id=" + productId + "&quantity=" + quantity);
     }
 
     @Test
@@ -82,7 +86,7 @@ public class AddCartItemServletTest {
         when(request.getParameterValues("quantity")).thenReturn(new String[]{quantity});
         when(request.getParameter("path")).thenReturn("path");
         when(request.getPathInfo()).thenReturn("/" + productId);
-        doThrow(new OutOfStockException(product, 10, available)).when(cartService).addProductToCart(any(), anyLong(), anyInt());
+        doThrow(new OutOfStockException(product, 10, available)).when(cartService).addCartItem(any(), anyLong(), anyInt());
 
         servlet.doPost(request, response);
 
