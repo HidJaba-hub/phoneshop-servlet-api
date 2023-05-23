@@ -2,7 +2,6 @@ package com.es.phoneshop.service;
 
 import com.es.phoneshop.exception.OutOfStockException;
 import com.es.phoneshop.exception.ProductNotFoundException;
-import com.es.phoneshop.exception.SameArgumentException;
 import com.es.phoneshop.model.entity.Product;
 import com.es.phoneshop.model.entity.cart.Cart;
 import com.es.phoneshop.model.entity.cart.CartItem;
@@ -124,18 +123,6 @@ public class CustomCartServiceTest {
         defaultCartService.updateProductInCart(cart, productId, quantity);
 
         verify(cartItem, atLeast(1)).setQuantity(quantity + cartItem.getQuantity());
-    }
-
-    @Test(expected = SameArgumentException.class)
-    public void givenProductWithSameQuantity_whenUpdateProduct_thenGetException() throws OutOfStockException {
-        long productId = product.getId();
-        int quantity = 1;
-        when(product.getStock()).thenReturn(100);
-        when(productService.getProductById(productId)).thenReturn(product);
-        when(product.getPrice()).thenReturn(new BigDecimal(1));
-        when(cartItem.getQuantity()).thenReturn(quantity);
-
-        defaultCartService.updateProductInCart(cart, productId, quantity);
     }
 
     @Test(expected = ProductNotFoundException.class)

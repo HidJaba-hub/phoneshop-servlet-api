@@ -18,7 +18,7 @@
         <img src="${pageContext.servletContext.contextPath}/images/logo.svg"/>
         PhoneShop
     </a>
-    <jsp:include page="/minicart/*"/>
+    <jsp:include page="../pages/minicart.jsp"/>
 </header>
 <main>
     <jsp:doBody/>

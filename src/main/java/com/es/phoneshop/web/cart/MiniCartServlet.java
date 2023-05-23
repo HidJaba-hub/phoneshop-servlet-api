@@ -1,7 +1,5 @@
 package com.es.phoneshop.web.cart;
 
-import com.es.phoneshop.service.cart.CartService;
-import com.es.phoneshop.service.cart.DefaultCartService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;

@@ -2,10 +2,10 @@ package com.es.phoneshop.web.cart;
 
 import com.es.phoneshop.exception.OutOfStockException;
 import com.es.phoneshop.exception.ProductNotFoundException;
-import com.es.phoneshop.exception.SameArgumentException;
 import com.es.phoneshop.model.entity.cart.Cart;
 import com.es.phoneshop.service.cart.CartService;
 import com.es.phoneshop.service.cart.DefaultCartService;
+import com.es.phoneshop.utils.QuantityParseValidator;
 import com.es.phoneshop.utils.ReferenceTool;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -19,12 +19,14 @@ import java.util.Map;
 
 public abstract class CartItemServlet extends HttpServlet {
 
+    protected QuantityParseValidator quantityParseValidator;
     private CartService cartService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         cartService = DefaultCartService.getInstance();
+        quantityParseValidator = QuantityParseValidator.getInstance();
     }
 
     protected void addProductToCart(HttpServletRequest request, long productId, int quantity, Map<Long, String> errors) throws IOException {
@@ -42,13 +44,13 @@ public abstract class CartItemServlet extends HttpServlet {
                                        int quantity, Map<Long, String> errors, ReferenceTool<Integer> sameQuantityCount) {
         Cart cart = cartService.getCart(request);
         try {
-            cartService.updateProductInCart(cart, productId, quantity);
+            if (!cartService.updateProductInCart(cart, productId, quantity)) {
+                sameQuantityCount.set(sameQuantityCount.get() + 1);
+            }
         } catch (OutOfStockException e) {
             errors.put(productId, "Out of stock, available " + e.getStockAvailable());
         } catch (IllegalArgumentException e) {
             errors.put(productId, "Wrong amount of products");
-        } catch (SameArgumentException e) {
-            sameQuantityCount.set(sameQuantityCount.get() + 1);
         } catch (ProductNotFoundException e) {
             errors.put(productId, e.getMessage());
         }

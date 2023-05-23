@@ -1,6 +1,5 @@
 package com.es.phoneshop.web.cart;
 
-import com.es.phoneshop.utils.ParseValidator;
 import com.es.phoneshop.utils.ReferenceTool;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,10 +33,10 @@ public class CartPageServlet extends CartItemServlet {
 
             int quantity;
             try {
-                if (ParseValidator.validateQuantity(quantities[i])) {
+                if (quantityParseValidator.validate(quantities[i], errors, productId)) {
                     quantity = parseQuantity(quantities[i], request);
                 } else {
-                    throw new ParseException(quantities[i], 0);
+                    continue;
                 }
             } catch (ParseException exception) {
                 errors.put(productId, "Not a number");

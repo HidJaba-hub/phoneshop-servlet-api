@@ -1,16 +1,8 @@
 package com.es.phoneshop.utils;
 
-public class ParseValidator {
+import java.util.Map;
 
-    public static boolean validateQuantity(String quantityStr) {
-        quantityStr = removeMinusesFromString(quantityStr);
-        if (quantityStr.matches("^\\d+([\\.\\,]\\d+)?$")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    public static String removeMinusesFromString(String input) {
-        return input.replaceAll("-", "");
-    }
+public interface ParseValidator {
+
+    boolean validate(String stringToValidate, Map<Long, String> errors, Long productId);
 }

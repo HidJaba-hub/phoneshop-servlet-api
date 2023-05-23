@@ -9,9 +9,6 @@
 <jsp:useBean id="product" type="com.es.phoneshop.model.entity.Product" scope="request"/>
 <tags:master pageTitle="Product Details">
     <p>
-        Cart: ${cart}
-    </p>
-    <p>
         <a href="${pageContext.servletContext.contextPath}/products">Go back</a>
     </p>
     <c:if test="${not empty param.message}">

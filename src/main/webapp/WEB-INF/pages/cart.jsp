@@ -6,9 +6,6 @@
 <jsp:useBean id="cart" type="com.es.phoneshop.model.entity.cart.Cart" scope="session"/>
 <c:set var="servletContextPath" value="${pageContext.servletContext.contextPath}"/>
 <tags:master pageTitle="Cart">
-    <p>
-        Cart: ${cart}
-    </p>
     <c:if test="${not empty param.message}">
         <div class="success">
                 ${param.message}

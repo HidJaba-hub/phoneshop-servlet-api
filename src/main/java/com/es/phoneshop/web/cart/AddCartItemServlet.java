@@ -1,6 +1,5 @@
 package com.es.phoneshop.web.cart;
 
-import com.es.phoneshop.utils.ParseValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.maven.shared.utils.StringUtils;
@@ -12,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AddCartItemServlet extends CartItemServlet {
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (!StringUtils.isEmpty(request.getPathInfo())) {
@@ -29,10 +27,11 @@ public class AddCartItemServlet extends CartItemServlet {
 
             int quantity;
             try {
-                if (ParseValidator.validateQuantity(quantities[index])) {
+                if (quantityParseValidator.validate(quantities[index], errors, productId)) {
                     quantity = parseQuantity(quantities[index], request);
                 } else {
-                    throw new ParseException(quantities[index], 0);
+                    response.sendRedirect(redirectionPath + "&errors=" + errors.get(productId) + "&id=" + productId + "&quantity=" + quantities[index]);
+                    return;
                 }
             } catch (ParseException exception) {
                 response.sendRedirect(redirectionPath + "&errors=" + "Not a number" + "&id=" + productId + "&quantity=" + quantities[index]);

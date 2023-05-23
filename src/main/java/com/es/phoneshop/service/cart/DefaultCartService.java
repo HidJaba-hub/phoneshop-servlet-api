@@ -2,7 +2,6 @@ package com.es.phoneshop.service.cart;
 
 import com.es.phoneshop.exception.OutOfStockException;
 import com.es.phoneshop.exception.ProductNotFoundException;
-import com.es.phoneshop.exception.SameArgumentException;
 import com.es.phoneshop.model.entity.Product;
 import com.es.phoneshop.model.entity.cart.Cart;
 import com.es.phoneshop.model.entity.cart.CartItem;
@@ -56,19 +55,20 @@ public class DefaultCartService implements CartService {
     }
 
     @Override
-    public void updateProductInCart(Cart cart, Long productId, int quantity) throws OutOfStockException, ProductNotFoundException {
+    public boolean updateProductInCart(Cart cart, Long productId, int quantity) throws OutOfStockException, ProductNotFoundException {
         Object syncObject = SyncObjectPool.getSyncObject(cart.getId().toString());
         synchronized (syncObject) {
             Product product = productService.getProductById(productId);
             Optional<CartItem> optionalCartItem = findCartItem(cart, product);
-            checkQuantity(product, quantity, 0);
+            checkQuantity(product, quantity);
 
             if (optionalCartItem.isPresent()) {
-                if (optionalCartItem.get().getQuantity() == quantity) {
-                    throw new SameArgumentException(optionalCartItem.get());
-                } else {
+                if (optionalCartItem.get().getQuantity() != quantity) {
                     optionalCartItem.get().setQuantity(quantity);
                     recalculateCart(cart);
+                    return true;
+                } else {
+                    return false;
                 }
             } else {
                 throw new ProductNotFoundException(productId, "Product wasn't found in cart");
@@ -109,6 +109,15 @@ public class DefaultCartService implements CartService {
     private void checkQuantity(Product product, int quantity, int cartQuantity) throws OutOfStockException {
         if (product.getStock() < quantity + cartQuantity) {
             throw new OutOfStockException(product, quantity, product.getStock() - cartQuantity);
+        }
+        if (quantity <= 0) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private void checkQuantity(Product product, int quantity) throws OutOfStockException {
+        if (product.getStock() < quantity) {
+            throw new OutOfStockException(product, quantity, product.getStock());
         }
         if (quantity <= 0) {
             throw new IllegalArgumentException();
