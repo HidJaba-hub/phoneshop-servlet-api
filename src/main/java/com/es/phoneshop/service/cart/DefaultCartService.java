@@ -66,7 +66,6 @@ public class DefaultCartService implements CartService {
             if (optionalCartItem.isPresent()) {
                 if (optionalCartItem.get().getQuantity() == quantity) {
                     throw new SameArgumentException(optionalCartItem.get());
-                    //it is for resource economy: if the quantity is the same there is no sense to waste our resources
                 } else {
                     optionalCartItem.get().setQuantity(quantity);
                     recalculateCart(cart);
@@ -79,16 +78,13 @@ public class DefaultCartService implements CartService {
 
     @Override
     public void deleteProductInCart(Cart cart, Long productId) throws ProductNotFoundException {
-        boolean isDeleted;
         Object syncObject = SyncObjectPool.getSyncObject(cart.getId().toString());
         synchronized (syncObject) {
-            isDeleted = cart.getItems().removeIf(cartItem ->
-                    productId.equals(cartItem.getProduct().getId()));
-        }
-        if (isDeleted) {
-            recalculateCart(cart);
-        } else {
-            throw new ProductNotFoundException(productId, "Product wasn't found in cart");
+            if (cart.getItems().removeIf(cartItem -> productId.equals(cartItem.getProduct().getId()))) {
+                recalculateCart(cart);
+            } else {
+                throw new ProductNotFoundException(productId, "Product wasn't found in cart");
+            }
         }
     }
 
@@ -98,10 +94,10 @@ public class DefaultCartService implements CartService {
                 .mapToInt(cartItem -> cartItem)
                 .sum());
 
-        cart.setTotalPrice(BigDecimal.valueOf(cart.getItems().stream()
-                .mapToInt(item -> item.getProduct().getPrice().intValueExact() * item.getQuantity())
-                .sum()
-        ));
+        cart.setTotalPrice(cart.getItems().stream()
+                .map(item -> item.getProduct().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );
     }
 
     private Optional<CartItem> findCartItem(Cart cart, Product product) {

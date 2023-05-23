@@ -11,7 +11,6 @@ import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.maven.shared.utils.StringUtils;
 
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -57,23 +56,6 @@ public abstract class CartItemServlet extends HttpServlet {
 
     protected int parseQuantity(String quantityStr, HttpServletRequest request) throws ParseException {
         NumberFormat format = NumberFormat.getInstance(request.getLocale());
-        String stringInput = removePointsFromString(removeMinusesFromString(removeNumbersFromString(quantityStr)));
-        if (StringUtils.isEmpty(stringInput)) {
-            return format.parse(quantityStr).intValue();
-        } else {
-            throw new ParseException(quantityStr, 0);
-        }
-    }
-
-    public String removeNumbersFromString(String input) {
-        return input.replaceAll("\\d+", "");
-    }
-
-    public String removeMinusesFromString(String input) {
-        return input.replaceAll("-", "");
-    }
-
-    public String removePointsFromString(String input) {
-        return input.replaceAll("\\.", "");
+        return format.parse(quantityStr).intValue();
     }
 }

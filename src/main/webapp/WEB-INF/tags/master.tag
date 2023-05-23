@@ -18,10 +18,7 @@
         <img src="${pageContext.servletContext.contextPath}/images/logo.svg"/>
         PhoneShop
     </a>
-    <a href="${pageContext.servletContext.contextPath}/cart">
-        Cart(${cart.totalQuantity}) <fmt:formatNumber value="${cart.totalPrice}" type="currency"
-                                                      currencySymbol="${cart.currency.symbol}"/>
-    </a>
+    <jsp:include page="/minicart/*"/>
 </header>
 <main>
     <jsp:doBody/>

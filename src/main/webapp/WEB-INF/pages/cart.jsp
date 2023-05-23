@@ -84,7 +84,11 @@
             </tr>
         </table>
         <p>
-            <button>Update</button>
+            <c:if test="${not empty cart.items}">
+                <button>
+                    Update
+                </button>
+            </c:if>
         </p>
     </form>
     <form id="deleteCartItem" method="post">
