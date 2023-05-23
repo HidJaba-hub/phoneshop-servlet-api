@@ -41,7 +41,7 @@
                     <td class="quantity">
                         <fmt:formatNumber value="${item.quantity}" var="quantity"/>
                         <c:set var="error" value="${errors[product.id]}"/>
-                        <input type="number" class="quantity" name="quantity"
+                        <input  class="quantity" name="quantity"
                                value="${not empty error? paramValues['quantity'][loop.index]: quantity}">
                         <input type="hidden" name="productId" value="${product.id}">
                         <c:if test="${not empty error}">
@@ -84,7 +84,11 @@
             </tr>
         </table>
         <p>
-            <button>Update</button>
+            <c:if test="${not empty cart.items}">
+                <button>
+                    Update
+                </button>
+            </c:if>
         </p>
     </form>
     <form id="deleteCartItem" method="post">

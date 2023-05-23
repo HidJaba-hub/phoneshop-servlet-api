@@ -5,6 +5,7 @@
          version="3.1">
     <display-name>Phoneshop servlet api training</display-name>
 
+
     <context-param>
         <param-name>insertDemoData</param-name>
         <param-value>true</param-value>
@@ -71,6 +72,16 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>miniCart</servlet-name>
+        <servlet-class>com.es.phoneshop.web.cart.MiniCartServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>miniCart</servlet-name>
+        <url-pattern>/cart/minicart</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>addItemToCart</servlet-name>
         <servlet-class>com.es.phoneshop.web.cart.AddCartItemServlet</servlet-class>
     </servlet>
@@ -110,5 +121,5 @@
         <error-code>404</error-code>
     </error-page>
 
-
 </web-app>
+
