@@ -19,11 +19,9 @@ public class DefaultCartService implements CartService {
 
     private static final String CART_SESSION_ATTRIBUTE = "cart";
     private ProductService productService;
-
     private DefaultCartService() {
         productService = CustomProductService.getInstance();
     }
-
     public static DefaultCartService getInstance() {
         return SingletonManager.INSTANCE.getSingleton();
     }
@@ -63,14 +61,13 @@ public class DefaultCartService implements CartService {
             Optional<CartItem> optionalCartItem = findCartItem(cart, product);
             checkQuantity(product, quantity);
 
-            if (optionalCartItem.isEmpty()){
+            if (optionalCartItem.isEmpty()) {
                 throw new ProductNotFoundException(productId, "Product wasn't found in cart");
             }
             if (optionalCartItem.get().getQuantity() != quantity) {
                 optionalCartItem.get().setQuantity(quantity);
                 recalculateCart(cart);
-            }
-            else {
+            } else {
                 sameQuantityCount.set(sameQuantityCount.get() + 1);
             }
         }

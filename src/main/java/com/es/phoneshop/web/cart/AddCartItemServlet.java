@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AddCartItemServlet extends CartItemServlet {
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (!StringUtils.isEmpty(request.getPathInfo())) {
@@ -28,7 +29,7 @@ public class AddCartItemServlet extends CartItemServlet {
             int quantity;
             try {
                 quantityParseValidator.validate(quantities[index], errors, productId);
-                if(errors.isEmpty()) {
+                if (errors.isEmpty()) {
                     quantity = parseQuantity(quantities[index], request);
                 } else {
                     response.sendRedirect(redirectionPath + "&errors=" + errors.get(productId) + "&id=" + productId + "&quantity=" + quantities[index]);

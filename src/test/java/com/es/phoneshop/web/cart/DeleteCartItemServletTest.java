@@ -4,6 +4,7 @@ import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.entity.cart.Cart;
 import com.es.phoneshop.service.cart.DefaultCartService;
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,10 +36,13 @@ public class DeleteCartItemServletTest {
     private RequestDispatcher requestDispatcher;
     @Mock
     private Cart cart;
+    @Mock
+    private ServletConfig config;
 
 
     @Before
     public void setup() throws ServletException {
+        servlet.init(config);
         MockitoAnnotations.initMocks(this);
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
     }

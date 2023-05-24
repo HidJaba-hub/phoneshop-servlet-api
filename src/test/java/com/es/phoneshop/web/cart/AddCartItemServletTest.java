@@ -3,7 +3,6 @@ package com.es.phoneshop.web.cart;
 import com.es.phoneshop.exception.OutOfStockException;
 import com.es.phoneshop.model.entity.Product;
 import com.es.phoneshop.service.cart.DefaultCartService;
-import com.es.phoneshop.validators.QuantityParseValidator;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -17,14 +16,11 @@ import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
 import java.util.Locale;
-import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -66,6 +62,7 @@ public class AddCartItemServletTest {
 
         verify(response).sendRedirect("path" + "&message=Cart updated successfully");
     }
+
     @Test
     public void givenInvalidQuantity_whenDoPost_thenSendErrorRedirect() throws IOException {
         long productId = 1L;

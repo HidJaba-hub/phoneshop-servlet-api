@@ -53,7 +53,7 @@ public class ProductDetailsPageServlet extends CartItemServlet {
             int quantity;
             try {
                 quantityParseValidator.validate(quantityStr, errors, productId);
-                if(errors.isEmpty()) {
+                if (errors.isEmpty()) {
                     quantity = parseQuantity(quantityStr, request);
                 } else {
                     response.sendRedirect(request.getContextPath() + "/products/" + productId +
