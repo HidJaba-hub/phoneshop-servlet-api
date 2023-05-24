@@ -27,7 +27,8 @@ public class AddCartItemServlet extends CartItemServlet {
 
             int quantity;
             try {
-                if (quantityParseValidator.validate(quantities[index], errors, productId)) {
+                quantityParseValidator.validate(quantities[index], errors, productId);
+                if(errors.isEmpty()) {
                     quantity = parseQuantity(quantities[index], request);
                 } else {
                     response.sendRedirect(redirectionPath + "&errors=" + errors.get(productId) + "&id=" + productId + "&quantity=" + quantities[index]);
@@ -37,7 +38,7 @@ public class AddCartItemServlet extends CartItemServlet {
                 response.sendRedirect(redirectionPath + "&errors=" + "Not a number" + "&id=" + productId + "&quantity=" + quantities[index]);
                 return;
             }
-            addProductToCart(request, productId, quantity, errors);
+            addProduct(request, productId, quantity, errors);
 
             if (errors.isEmpty()) {
                 response.sendRedirect(redirectionPath + "&message=Cart updated successfully");

@@ -1,4 +1,4 @@
-package com.es.phoneshop.utils;
+package com.es.phoneshop.validators;
 
 import java.util.Map;
 
@@ -12,12 +12,9 @@ public class QuantityParseValidator implements ParseValidator {
         return QuantityParseValidator.SingletonManager.INSTANCE.getSingleton();
     }
 
-    public boolean validate(String quantityStr, Map<Long, String> errors, Long productId) {
-        if (quantityStr.matches("^-?\\d+([\\.\\,]\\d+)?$")) {
-            return true;
-        } else {
+    public void validate(String quantityStr, Map<Long, String> errors, Long productId) {
+        if (!quantityStr.matches("^-?\\d+([\\.\\,]\\d+)?$")) {
             errors.put(productId, "Not a number");
-            return false;
         }
     }
 

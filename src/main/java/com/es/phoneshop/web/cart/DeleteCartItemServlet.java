@@ -30,7 +30,7 @@ public class DeleteCartItemServlet extends HttpServlet {
 
             Cart cart = cartService.getCart(request);
             try {
-                cartService.deleteProductInCart(cart, productId);
+                cartService.deleteCartItem(cart, productId);
             } catch (ProductNotFoundException e) {
                 response.sendRedirect(request.getContextPath() + "/cart?errors=" + e.getMessage());
             }

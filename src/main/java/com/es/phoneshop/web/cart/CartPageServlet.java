@@ -33,7 +33,8 @@ public class CartPageServlet extends CartItemServlet {
 
             int quantity;
             try {
-                if (quantityParseValidator.validate(quantities[i], errors, productId)) {
+                quantityParseValidator.validate(quantities[i], errors, productId);
+                if(!errors.containsKey(productId)) {
                     quantity = parseQuantity(quantities[i], request);
                 } else {
                     continue;
@@ -42,7 +43,7 @@ public class CartPageServlet extends CartItemServlet {
                 errors.put(productId, "Not a number");
                 continue;
             }
-            updateProductToCart(request, productId, quantity, errors, sameQuantityCount);
+            updateProduct(request, productId, quantity, errors, sameQuantityCount);
         }
         if (errors.isEmpty() && sameQuantityCount.get() != productIds.length) {
             response.sendRedirect(request.getContextPath() + "/cart?message=Cart updated successfully");

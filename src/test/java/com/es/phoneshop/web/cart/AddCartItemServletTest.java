@@ -3,8 +3,9 @@ package com.es.phoneshop.web.cart;
 import com.es.phoneshop.exception.OutOfStockException;
 import com.es.phoneshop.model.entity.Product;
 import com.es.phoneshop.service.cart.DefaultCartService;
-import com.es.phoneshop.utils.QuantityParseValidator;
+import com.es.phoneshop.validators.QuantityParseValidator;
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,6 +17,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
 import java.util.Locale;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -40,13 +42,14 @@ public class AddCartItemServletTest {
     @Mock
     private DefaultCartService cartService;
     @Mock
-    private QuantityParseValidator quantityParseValidator;
-    @Mock
     private Product product;
+    @Mock
+    private ServletConfig config;
 
     @Before
     public void setup() throws ServletException {
-        MockitoAnnotations.initMocks(this);
+        servlet.init(config);
+        MockitoAnnotations.openMocks(this);
         when(request.getLocale()).thenReturn(Locale.US);
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
     }
@@ -58,13 +61,11 @@ public class AddCartItemServletTest {
         when(request.getParameterValues("quantity")).thenReturn(new String[]{"1"});
         when(request.getParameter("path")).thenReturn("path");
         when(request.getPathInfo()).thenReturn("/" + productId);
-        when(quantityParseValidator.validate(eq("1"), anyMap(), eq(productId))).thenReturn(true);
 
         servlet.doPost(request, response);
 
         verify(response).sendRedirect("path" + "&message=Cart updated successfully");
     }
-
     @Test
     public void givenInvalidQuantity_whenDoPost_thenSendErrorRedirect() throws IOException {
         long productId = 1L;
@@ -73,7 +74,6 @@ public class AddCartItemServletTest {
         when(request.getParameterValues("quantity")).thenReturn(new String[]{quantity});
         when(request.getParameter("path")).thenReturn("path");
         when(request.getPathInfo()).thenReturn("/" + productId);
-        when(quantityParseValidator.validate(eq("1a"), anyMap(), eq(productId))).thenReturn(false);
 
         servlet.doPost(request, response);
 
@@ -89,8 +89,7 @@ public class AddCartItemServletTest {
         when(request.getParameterValues("quantity")).thenReturn(new String[]{quantity});
         when(request.getParameter("path")).thenReturn("path");
         when(request.getPathInfo()).thenReturn("/" + productId);
-        when(quantityParseValidator.validate(eq("1"), anyMap(), eq(productId))).thenReturn(true);
-        doThrow(new OutOfStockException(product, 10, available)).when(cartService).addProductToCart(any(), anyLong(), anyInt());
+        doThrow(new OutOfStockException(product, 10, available)).when(cartService).addCartItem(any(), anyLong(), anyInt());
 
         servlet.doPost(request, response);
 

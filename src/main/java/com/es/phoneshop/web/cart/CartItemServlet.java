@@ -5,7 +5,7 @@ import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.entity.cart.Cart;
 import com.es.phoneshop.service.cart.CartService;
 import com.es.phoneshop.service.cart.DefaultCartService;
-import com.es.phoneshop.utils.QuantityParseValidator;
+import com.es.phoneshop.validators.QuantityParseValidator;
 import com.es.phoneshop.utils.ReferenceTool;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -29,10 +29,10 @@ public abstract class CartItemServlet extends HttpServlet {
         quantityParseValidator = QuantityParseValidator.getInstance();
     }
 
-    protected void addProductToCart(HttpServletRequest request, long productId, int quantity, Map<Long, String> errors) throws IOException {
+    protected void addProduct(HttpServletRequest request, long productId, int quantity, Map<Long, String> errors) throws IOException {
         Cart cart = cartService.getCart(request);
         try {
-            cartService.addProductToCart(cart, productId, quantity);
+            cartService.addCartItem(cart, productId, quantity);
         } catch (OutOfStockException e) {
             errors.put(productId, "Out of stock, available " + e.getStockAvailable());
         } catch (IllegalArgumentException e) {
@@ -40,13 +40,11 @@ public abstract class CartItemServlet extends HttpServlet {
         }
     }
 
-    protected void updateProductToCart(HttpServletRequest request, long productId,
-                                       int quantity, Map<Long, String> errors, ReferenceTool<Integer> sameQuantityCount) {
+    protected void updateProduct(HttpServletRequest request, long productId,
+                                 int quantity, Map<Long, String> errors, ReferenceTool<Integer> sameQuantityCount) {
         Cart cart = cartService.getCart(request);
         try {
-            if (!cartService.updateProductInCart(cart, productId, quantity)) {
-                sameQuantityCount.set(sameQuantityCount.get() + 1);
-            }
+            cartService.updateCartItem(cart, productId, quantity, sameQuantityCount);
         } catch (OutOfStockException e) {
             errors.put(productId, "Out of stock, available " + e.getStockAvailable());
         } catch (IllegalArgumentException e) {

@@ -1,8 +1,11 @@
 package com.es.phoneshop.web.cart;
 
+import com.es.phoneshop.exception.OutOfStockException;
 import com.es.phoneshop.service.cart.DefaultCartService;
-import com.es.phoneshop.utils.QuantityParseValidator;
+import com.es.phoneshop.utils.ReferenceTool;
+import com.es.phoneshop.validators.QuantityParseValidator;
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,10 +18,13 @@ import org.mockito.MockitoAnnotations;
 import java.io.IOException;
 import java.util.Locale;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -35,10 +41,11 @@ public class CartPageServletTest {
     @Mock
     private DefaultCartService cartService;
     @Mock
-    private QuantityParseValidator quantityParseValidator;
+    private ServletConfig config;
 
     @Before
     public void setup() throws ServletException {
+        servlet.init(config);
         MockitoAnnotations.initMocks(this);
         when(request.getLocale()).thenReturn(Locale.US);
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
@@ -68,7 +75,6 @@ public class CartPageServletTest {
     public void givenInvalidQuantity_whenDoPost_thenSendErrorRedirect() throws ServletException, IOException {
         when(request.getParameterValues("productId")).thenReturn(new String[]{"1"});
         when(request.getParameterValues("quantity")).thenReturn(new String[]{"a"});
-        when(quantityParseValidator.validate(eq("a"), anyMap(), anyLong())).thenReturn(true);
 
         servlet.doPost(request, response);
 
@@ -76,10 +82,10 @@ public class CartPageServletTest {
     }
 
     @Test
-    public void givenNegativeQuantity_whenDoPost_thenSendErrorRedirect() throws ServletException, IOException {
+    public void givenNegativeQuantity_whenDoPost_thenSendErrorRedirect() throws ServletException, IOException, OutOfStockException {
         when(request.getParameterValues("productId")).thenReturn(new String[]{"1"});
         when(request.getParameterValues("quantity")).thenReturn(new String[]{"-1"});
-        when(quantityParseValidator.validate(eq("-1"), anyMap(), anyLong())).thenReturn(true);
+        doThrow(new IllegalArgumentException()).when(cartService).updateCartItem(any(), anyLong(), anyInt(), any());
 
         servlet.doPost(request, response);
 

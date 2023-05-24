@@ -87,7 +87,6 @@ public class ProductDetailsPageServletTest {
     public void givenProductId_whenDoPost_thenVerifySendErrorRedirect() throws ServletException, IOException {
         long productId = -1;
         when(request.getPathInfo()).thenReturn("/" + productId);
-        when(request.getLocale()).thenReturn(Locale.US);
         when(request.getParameter("quantity")).thenReturn("a");
 
         servlet.doPost(request, response);
@@ -107,7 +106,7 @@ public class ProductDetailsPageServletTest {
 
         servlet.doPost(request, response);
 
-        verify(cartService).addProductToCart(cart, productId, quantity);
+        verify(cartService).addCartItem(cart, productId, quantity);
         verify(response).sendRedirect(request.getContextPath() + "/products/" + productId + "?message=Product added to cart");
     }
 
@@ -121,11 +120,11 @@ public class ProductDetailsPageServletTest {
         when(request.getLocale()).thenReturn(Locale.US);
         when(request.getParameter("quantity")).thenReturn(String.valueOf(quantity));
         when(cartService.getCart(request)).thenReturn(cart);
-        doThrow(new IllegalArgumentException()).when(cartService).addProductToCart(cart, productId, quantity);
+        doThrow(new IllegalArgumentException()).when(cartService).addCartItem(cart, productId, quantity);
 
         servlet.doPost(request, response);
 
-        verify(cartService).addProductToCart(cart, productId, -1);
+        verify(cartService).addCartItem(cart, productId, -1);
         verify(response).sendRedirect(request.getContextPath() + "/products/" + productId + "?error=" + errorString
                 + "&errorQuantity=" + quantity);
     }
@@ -141,11 +140,11 @@ public class ProductDetailsPageServletTest {
         when(request.getParameter("quantity")).thenReturn(String.valueOf(quantity));
         when(cartService.getCart(request)).thenReturn(cart);
         doThrow(new OutOfStockException(new Product(), quantity, availableQuantity))
-                .when(cartService).addProductToCart(cart, productId, quantity);
+                .when(cartService).addCartItem(cart, productId, quantity);
 
         servlet.doPost(request, response);
 
-        verify(cartService).addProductToCart(cart, productId, quantity);
+        verify(cartService).addCartItem(cart, productId, quantity);
         verify(response).sendRedirect(request.getContextPath() + "/products/" + productId +
                 "?error=" + "Out of stock, available " + availableQuantity + "&errorQuantity=" + quantity);
     }

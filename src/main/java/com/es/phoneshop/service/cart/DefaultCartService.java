@@ -7,6 +7,7 @@ import com.es.phoneshop.model.entity.cart.Cart;
 import com.es.phoneshop.model.entity.cart.CartItem;
 import com.es.phoneshop.service.CustomProductService;
 import com.es.phoneshop.service.ProductService;
+import com.es.phoneshop.utils.ReferenceTool;
 import com.es.phoneshop.utils.SyncObjectPool;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -37,7 +38,7 @@ public class DefaultCartService implements CartService {
     }
 
     @Override
-    public void addProductToCart(Cart cart, Long productId, int quantity) throws OutOfStockException {
+    public void addCartItem(Cart cart, Long productId, int quantity) throws OutOfStockException {
         Object syncObject = SyncObjectPool.getSyncObject(cart.getId().toString());
         synchronized (syncObject) {
             Product product = productService.getProductById(productId);
@@ -55,29 +56,28 @@ public class DefaultCartService implements CartService {
     }
 
     @Override
-    public boolean updateProductInCart(Cart cart, Long productId, int quantity) throws OutOfStockException, ProductNotFoundException {
+    public void updateCartItem(Cart cart, Long productId, int quantity, ReferenceTool<Integer> sameQuantityCount) throws OutOfStockException, ProductNotFoundException {
         Object syncObject = SyncObjectPool.getSyncObject(cart.getId().toString());
         synchronized (syncObject) {
             Product product = productService.getProductById(productId);
             Optional<CartItem> optionalCartItem = findCartItem(cart, product);
             checkQuantity(product, quantity);
 
-            if (optionalCartItem.isPresent()) {
-                if (optionalCartItem.get().getQuantity() != quantity) {
-                    optionalCartItem.get().setQuantity(quantity);
-                    recalculateCart(cart);
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
+            if (optionalCartItem.isEmpty()){
                 throw new ProductNotFoundException(productId, "Product wasn't found in cart");
+            }
+            if (optionalCartItem.get().getQuantity() != quantity) {
+                optionalCartItem.get().setQuantity(quantity);
+                recalculateCart(cart);
+            }
+            else {
+                sameQuantityCount.set(sameQuantityCount.get() + 1);
             }
         }
     }
 
     @Override
-    public void deleteProductInCart(Cart cart, Long productId) throws ProductNotFoundException {
+    public void deleteCartItem(Cart cart, Long productId) throws ProductNotFoundException {
         Object syncObject = SyncObjectPool.getSyncObject(cart.getId().toString());
         synchronized (syncObject) {
             if (cart.getItems().removeIf(cartItem -> productId.equals(cartItem.getProduct().getId()))) {

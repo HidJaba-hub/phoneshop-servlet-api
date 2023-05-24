@@ -59,7 +59,7 @@ public class DeleteCartItemServletTest {
         long productId = -1L;
         String errorString = "Product not found";
         when(request.getPathInfo()).thenReturn("/" + productId);
-        doThrow(new ProductNotFoundException(productId, errorString)).when(cartService).deleteProductInCart(any(), any());
+        doThrow(new ProductNotFoundException(productId, errorString)).when(cartService).deleteCartItem(any(), any());
 
         servlet.doPost(request, response);
 
