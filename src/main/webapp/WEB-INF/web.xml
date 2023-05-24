@@ -78,7 +78,7 @@
 
     <servlet-mapping>
         <servlet-name>miniCart</servlet-name>
-        <url-pattern>/minicart/*</url-pattern>
+        <url-pattern>/minicart</url-pattern>
     </servlet-mapping>
 
     <servlet>

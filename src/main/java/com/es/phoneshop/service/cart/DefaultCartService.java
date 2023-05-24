@@ -88,7 +88,7 @@ public class DefaultCartService implements CartService {
     private void recalculateCart(Cart cart) {
         cart.setTotalQuantity(cart.getItems().stream()
                 .map(CartItem::getQuantity)
-                .mapToInt(cartItem -> cartItem)
+                .mapToInt(Integer::intValue)
                 .sum());
 
         cart.setTotalPrice(cart.getItems().stream()
