@@ -8,16 +8,16 @@ import jakarta.servlet.http.HttpSession;
 
 import java.util.Deque;
 
-public class CustomProductHistoryService implements ProductHistoryService {
+public class CustomRecentlyViewedProductsService implements RecentlyViewedProductsService {
 
     private static final String VIEWED_PRODUCTS_SESSION_ATTRIBUTE = "viewedProducts";
     private static final int MAX_VIEWED_PRODUCTS = 4;
 
-    private CustomProductHistoryService() {
+    private CustomRecentlyViewedProductsService() {
 
     }
 
-    public static CustomProductHistoryService getInstance() {
+    public static CustomRecentlyViewedProductsService getInstance() {
         return SingletonManager.INSTANCE.getSingleton();
     }
 
@@ -52,9 +52,9 @@ public class CustomProductHistoryService implements ProductHistoryService {
     private enum SingletonManager {
 
         INSTANCE;
-        private static final CustomProductHistoryService singleton = new CustomProductHistoryService();
+        private static final CustomRecentlyViewedProductsService singleton = new CustomRecentlyViewedProductsService();
 
-        public CustomProductHistoryService getSingleton() {
+        public CustomRecentlyViewedProductsService getSingleton() {
             return singleton;
         }
     }

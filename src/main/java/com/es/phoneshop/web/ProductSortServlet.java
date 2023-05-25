@@ -33,7 +33,8 @@ public class ProductSortServlet extends HttpServlet {
         String sort = request.getParameter("sort");
         String order = request.getParameter("order");
         String query = request.getParameter("query");
-        List<Product> products = productService.getProductsWithSortingAndQuery(SortField.valueOf(sort.toUpperCase()), SortOrder.valueOf(order.toUpperCase()), query);
+        List<Product> products = productService.getProductsWithSortingAndQuery(SortField.valueOf(sort.toUpperCase()),
+                SortOrder.valueOf(order.toUpperCase()), query);
         String json = objectMapper.writeValueAsString(products
                 .stream()
                 .map(Product::getId)

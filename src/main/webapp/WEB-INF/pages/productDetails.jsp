@@ -9,9 +9,6 @@
 <jsp:useBean id="product" type="com.es.phoneshop.model.entity.Product" scope="request"/>
 <tags:master pageTitle="Product Details">
     <p>
-        Cart: ${cart}
-    </p>
-    <p>
         <a href="${pageContext.servletContext.contextPath}/products">Go back</a>
     </p>
     <c:if test="${not empty param.message}">
@@ -51,7 +48,8 @@
             <tr>
                 <td>Quantity</td>
                 <td>
-                    <input type="number" class="quantity" name="quantity" value="${not empty param.error ? param.errorQuantity : 1}">
+                    <input type="number" class="quantity" name="quantity"
+                           value="${not empty param.error ? param.errorQuantity : 1}">
                     <c:if test="${not empty param.error}">
                         <div class="error">
                                 ${param.error}
@@ -61,6 +59,5 @@
             </tr>
         </table>
         <button>Add to cart</button>
-        <tags:viewedProducts/>
     </form>
 </tags:master>

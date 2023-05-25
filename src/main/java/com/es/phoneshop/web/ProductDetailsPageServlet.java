@@ -1,37 +1,32 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.exception.OutOfStockException;
 import com.es.phoneshop.model.entity.RecentlyViewedProducts;
-import com.es.phoneshop.model.entity.cart.Cart;
 import com.es.phoneshop.service.CustomProductService;
 import com.es.phoneshop.service.ProductService;
-import com.es.phoneshop.service.cart.CartService;
-import com.es.phoneshop.service.cart.DefaultCartService;
-import com.es.phoneshop.service.productHistory.CustomProductHistoryService;
-import com.es.phoneshop.service.productHistory.ProductHistoryService;
+import com.es.phoneshop.service.productHistory.CustomRecentlyViewedProductsService;
+import com.es.phoneshop.service.productHistory.RecentlyViewedProductsService;
+import com.es.phoneshop.web.cart.CartItemServlet;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.maven.shared.utils.StringUtils;
 
 import java.io.IOException;
-import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 
-public class ProductDetailsPageServlet extends HttpServlet {
+public class ProductDetailsPageServlet extends CartItemServlet {
 
     private ProductService productService;
-    private ProductHistoryService productHistoryService;
-    private CartService cartService;
+    private RecentlyViewedProductsService recentlyViewedProductsService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         productService = CustomProductService.getInstance();
-        cartService = DefaultCartService.getInstance();
-        productHistoryService = CustomProductHistoryService.getInstance();
+        recentlyViewedProductsService = CustomRecentlyViewedProductsService.getInstance();
     }
 
     @Override
@@ -52,48 +47,39 @@ public class ProductDetailsPageServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (!StringUtils.isEmpty(request.getPathInfo())) {
             long productId = Long.valueOf(request.getPathInfo().substring(1));
+            Map<Long, String> errors = new HashMap<>();
+            String quantityStr = request.getParameter("quantity");
 
             int quantity;
             try {
-                quantity = parseQuantity(request);
+                quantityParseValidator.validate(quantityStr, errors, productId);
+                if (errors.isEmpty()) {
+                    quantity = parseQuantity(quantityStr, request);
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/products/" + productId +
+                            "?error=" + errors.get(productId));
+                    return;
+                }
             } catch (ParseException exception) {
-                response.sendRedirect(request.getContextPath() + "/products/" + productId + "?error=" + "Not a number");
+                response.sendRedirect(request.getContextPath() + "/products/" + productId +
+                        "?error=" + "Not a number");
                 return;
             }
-            addProductToCart(request, response, productId, quantity);
+            addProduct(request, productId, quantity, errors);
+            if (errors.isEmpty()) {
+                response.sendRedirect(request.getContextPath() + "/products/" + productId +
+                        "?message=Product added to cart");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/products/" + productId +
+                        "?error=" + errors.get(productId) + "&errorQuantity=" + quantity);
+            }
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Page not found");
         }
     }
 
-    private void addProductToCart(HttpServletRequest request, HttpServletResponse response,
-                                  long productId, int quantity) throws IOException {
-        String errorString;
-        Cart cart = cartService.getCart(request);
-        try {
-            cartService.addProductToCart(cart, productId, quantity);
-        } catch (OutOfStockException e) {
-            errorString = "Out of stock, available " + e.getStockAvailable();
-            response.sendRedirect(request.getContextPath() + "/products/" +
-                    productId + "?error=" + errorString + "&errorQuantity=" + quantity);
-            return;
-        } catch (IllegalArgumentException e) {
-            errorString = "Wrong amount of products";
-            response.sendRedirect(request.getContextPath() + "/products/" +
-                    productId + "?error=" + errorString + "&errorQuantity=" + quantity);
-            return;
-        }
-        response.sendRedirect(request.getContextPath() + "/products/" + productId + "?message=Product added to cart");
-    }
-
-    private int parseQuantity(HttpServletRequest request) throws ParseException {
-        String quantityStr = request.getParameter("quantity");
-        NumberFormat format = NumberFormat.getInstance(request.getLocale());
-        return format.parse(quantityStr).intValue();
-    }
-
     private void fillRecentlyViewedProductList(HttpServletRequest request, long productId) {
-        RecentlyViewedProducts recentlyViewedProducts = productHistoryService.getRecentlyViewedProducts(request);
-        productHistoryService.addRecentlyViewedProduct(recentlyViewedProducts, productService.getProductById(productId));
+        RecentlyViewedProducts recentlyViewedProducts = recentlyViewedProductsService.getRecentlyViewedProducts(request);
+        recentlyViewedProductsService.addRecentlyViewedProduct(recentlyViewedProducts, productService.getProductById(productId));
     }
 }

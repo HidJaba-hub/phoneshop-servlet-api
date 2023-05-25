@@ -7,7 +7,7 @@ import com.es.phoneshop.model.entity.RecentlyViewedProducts;
 import com.es.phoneshop.model.entity.cart.Cart;
 import com.es.phoneshop.service.ProductService;
 import com.es.phoneshop.service.cart.DefaultCartService;
-import com.es.phoneshop.service.productHistory.ProductHistoryService;
+import com.es.phoneshop.service.productHistory.RecentlyViewedProductsService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -48,7 +48,7 @@ public class ProductDetailsPageServletTest {
     @Mock
     private DefaultCartService cartService;
     @Mock
-    private ProductHistoryService productHistoryService;
+    private RecentlyViewedProductsService recentlyViewedProductsService;
     @Mock
     private ServletConfig config;
 
@@ -75,7 +75,7 @@ public class ProductDetailsPageServletTest {
         long productId = product.getId();
         when(request.getPathInfo()).thenReturn("/" + productId);
         when(productService.getProductById(productId)).thenReturn(product);
-        when(productHistoryService.getRecentlyViewedProducts(request)).thenReturn(recentlyViewedProducts);
+        when(recentlyViewedProductsService.getRecentlyViewedProducts(request)).thenReturn(recentlyViewedProducts);
 
         servlet.doGet(request, response);
 
@@ -87,7 +87,6 @@ public class ProductDetailsPageServletTest {
     public void givenProductId_whenDoPost_thenVerifySendErrorRedirect() throws ServletException, IOException {
         long productId = -1;
         when(request.getPathInfo()).thenReturn("/" + productId);
-        when(request.getLocale()).thenReturn(Locale.US);
         when(request.getParameter("quantity")).thenReturn("a");
 
         servlet.doPost(request, response);
@@ -107,12 +106,12 @@ public class ProductDetailsPageServletTest {
 
         servlet.doPost(request, response);
 
-        verify(cartService).addProductToCart(cart, productId, quantity);
+        verify(cartService).addCartItem(cart, productId, quantity);
         verify(response).sendRedirect(request.getContextPath() + "/products/" + productId + "?message=Product added to cart");
     }
 
     @Test
-    public void givenNegativeQuantity_whenDoPost_thenVerifySendErrorRedirect() throws ServletException, IOException, OutOfStockException {
+    public void givenNegativeQuantity_whenDoPost_thenVerifySendErrorRedirect() throws IOException, OutOfStockException {
         long productId = -1;
         int quantity = -1;
         String errorString = "Wrong amount of products";
@@ -121,11 +120,11 @@ public class ProductDetailsPageServletTest {
         when(request.getLocale()).thenReturn(Locale.US);
         when(request.getParameter("quantity")).thenReturn(String.valueOf(quantity));
         when(cartService.getCart(request)).thenReturn(cart);
-        doThrow(new IllegalArgumentException()).when(cartService).addProductToCart(cart, productId, quantity);
+        doThrow(new IllegalArgumentException()).when(cartService).addCartItem(cart, productId, quantity);
 
         servlet.doPost(request, response);
 
-        verify(cartService).addProductToCart(cart, productId, -1);
+        verify(cartService).addCartItem(cart, productId, -1);
         verify(response).sendRedirect(request.getContextPath() + "/products/" + productId + "?error=" + errorString
                 + "&errorQuantity=" + quantity);
     }
@@ -141,11 +140,11 @@ public class ProductDetailsPageServletTest {
         when(request.getParameter("quantity")).thenReturn(String.valueOf(quantity));
         when(cartService.getCart(request)).thenReturn(cart);
         doThrow(new OutOfStockException(new Product(), quantity, availableQuantity))
-                .when(cartService).addProductToCart(cart, productId, quantity);
+                .when(cartService).addCartItem(cart, productId, quantity);
 
         servlet.doPost(request, response);
 
-        verify(cartService).addProductToCart(cart, productId, quantity);
+        verify(cartService).addCartItem(cart, productId, quantity);
         verify(response).sendRedirect(request.getContextPath() + "/products/" + productId +
                 "?error=" + "Out of stock, available " + availableQuantity + "&errorQuantity=" + quantity);
     }
