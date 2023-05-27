@@ -5,11 +5,10 @@
     <%@ include file="/styles/main.css" %>
 </style>
 
-<c:if test="${viewedProducts != null}">
-    <jsp:useBean id="viewedProducts" type="com.es.phoneshop.model.entity.RecentlyViewedProducts" scope="session"/>
+<jsp:useBean id="viewedProducts" type="com.es.phoneshop.model.entity.RecentlyViewedProducts" scope="session"/>
+<c:if test="${not empty viewedProducts.recentlyViewedProducts}">
     <h2 style="text-align: center">Recently viewed</h2>
     <div class="recently-viewed">
-        <c:if test="${not empty viewedProducts}">
             <c:forEach var="product" items="${viewedProducts.recentlyViewedProducts}">
                 <div class="recent-product">
                     <img class="recent-product-img" src="${product.imageUrl}" alt="${product.description}">
@@ -21,6 +20,5 @@
                     </p>
                 </div>
             </c:forEach>
-        </c:if>
     </div>
 </c:if>

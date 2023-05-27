@@ -4,5 +4,11 @@ import java.util.Map;
 
 public interface ParseValidator {
 
-    void validate(String stringToValidate, Map<Long, String> errors, Long productId);
+    void validateQuantity(String stringToValidate, Map<Long, String> errors, Long productId);
+
+    void validateName(String stringToValidate, Map<String, String> errors, String parameter);
+
+    void validateNumber(String stringToValidate, Map<String, String> errors, String parameter);
+
+    void validateDate(String stringToValidate, Map<String, String> errors, String parameter);
 }

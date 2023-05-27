@@ -28,7 +28,7 @@ public class AddCartItemServlet extends CartItemServlet {
 
             int quantity;
             try {
-                quantityParseValidator.validate(quantities[index], errors, productId);
+                defaultParseValidator.validateQuantity(quantities[index], errors, productId);
                 if (errors.isEmpty()) {
                     quantity = parseQuantity(quantities[index], request);
                 } else {

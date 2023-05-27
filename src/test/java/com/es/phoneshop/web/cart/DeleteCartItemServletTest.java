@@ -69,4 +69,13 @@ public class DeleteCartItemServletTest {
 
         verify(response).sendRedirect(request.getContextPath() + "/cart?errors=" + errorString);
     }
+
+    @Test
+    public void givenInvalidPathInfo_whenDoPost_thenSend404Error() throws IOException, ServletException {
+        when(request.getPathInfo()).thenReturn("");
+
+        servlet.doPost(request, response);
+
+        verify(response).sendError(HttpServletResponse.SC_NOT_FOUND, "Page not found");
+    }
 }

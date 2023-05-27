@@ -5,8 +5,8 @@ import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.entity.Product;
 import com.es.phoneshop.model.entity.RecentlyViewedProducts;
 import com.es.phoneshop.model.entity.cart.Cart;
-import com.es.phoneshop.service.ProductService;
 import com.es.phoneshop.service.cart.DefaultCartService;
+import com.es.phoneshop.service.product.ProductService;
 import com.es.phoneshop.service.productHistory.RecentlyViewedProductsService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletConfig;
@@ -72,7 +72,7 @@ public class ProductDetailsPageServletTest {
     public void givenProduct_whenGetRequest_thenSetProductToAttribute() throws ServletException, IOException {
         Product product = new Product();
         RecentlyViewedProducts recentlyViewedProducts = new RecentlyViewedProducts();
-        long productId = product.getId();
+        long productId = 1L;
         when(request.getPathInfo()).thenReturn("/" + productId);
         when(productService.getProductById(productId)).thenReturn(product);
         when(recentlyViewedProductsService.getRecentlyViewedProducts(request)).thenReturn(recentlyViewedProducts);

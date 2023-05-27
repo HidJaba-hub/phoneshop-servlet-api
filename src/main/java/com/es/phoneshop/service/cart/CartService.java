@@ -14,4 +14,6 @@ public interface CartService {
     void updateCartItem(Cart cart, Long productId, int quantity, ReferenceTool<Integer> sameQuantityCount) throws OutOfStockException;
 
     void deleteCartItem(Cart cart, Long productId);
+
+    void cleanCart(Cart cart);
 }

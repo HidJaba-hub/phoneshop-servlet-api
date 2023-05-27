@@ -11,7 +11,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Getter
 @Setter
-public class CartItem implements Serializable {
+public class CartItem implements Serializable, Cloneable {
 
     private Product product;
     private int quantity;
@@ -25,6 +25,11 @@ public class CartItem implements Serializable {
             return false;
         }
         return Objects.equals(product, cartItem.product);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 
     @Override

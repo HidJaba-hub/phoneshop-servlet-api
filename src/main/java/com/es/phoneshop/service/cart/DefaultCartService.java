@@ -5,8 +5,8 @@ import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.entity.Product;
 import com.es.phoneshop.model.entity.cart.Cart;
 import com.es.phoneshop.model.entity.cart.CartItem;
-import com.es.phoneshop.service.CustomProductService;
-import com.es.phoneshop.service.ProductService;
+import com.es.phoneshop.service.product.CustomProductService;
+import com.es.phoneshop.service.product.ProductService;
 import com.es.phoneshop.utils.ReferenceTool;
 import com.es.phoneshop.utils.SyncObjectPool;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,9 +19,11 @@ public class DefaultCartService implements CartService {
 
     private static final String CART_SESSION_ATTRIBUTE = "cart";
     private ProductService productService;
+
     private DefaultCartService() {
         productService = CustomProductService.getInstance();
     }
+
     public static DefaultCartService getInstance() {
         return SingletonManager.INSTANCE.getSingleton();
     }
@@ -82,6 +84,15 @@ public class DefaultCartService implements CartService {
             } else {
                 throw new ProductNotFoundException(productId, "Product wasn't found in cart");
             }
+        }
+    }
+
+    @Override
+    public void cleanCart(Cart cart) {
+        Object syncObject = SyncObjectPool.getSyncObject(cart.getId().toString());
+        synchronized (syncObject) {
+            cart.getItems().clear();
+            recalculateCart(cart);
         }
     }
 
