@@ -88,6 +88,9 @@
             </c:if>
         </p>
     </form>
+    <form action="${servletContextPath}/checkout">
+        <button>CheckOut</button>
+    </form>
     <form id="deleteCartItem" method="post">
     </form>
 </tags:master>

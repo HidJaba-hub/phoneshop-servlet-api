@@ -1,10 +1,11 @@
 package com.es.phoneshop.service;
 
-import com.es.phoneshop.DAO.ProductDao;
+import com.es.phoneshop.DAO.productDao.ProductDao;
 import com.es.phoneshop.SortField;
 import com.es.phoneshop.SortOrder;
 import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.entity.Product;
+import com.es.phoneshop.service.product.CustomProductService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;

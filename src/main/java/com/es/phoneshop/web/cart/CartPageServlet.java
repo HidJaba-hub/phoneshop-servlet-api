@@ -33,7 +33,7 @@ public class CartPageServlet extends CartItemServlet {
 
             int quantity;
             try {
-                quantityParseValidator.validate(quantities[i], errors, productId);
+                defaultParseValidator.validateQuantity(quantities[i], errors, productId);
                 if (!errors.containsKey(productId)) {
                     quantity = parseQuantity(quantities[i], request);
                 } else {

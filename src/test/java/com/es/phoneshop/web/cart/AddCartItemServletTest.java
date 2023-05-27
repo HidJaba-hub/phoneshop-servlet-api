@@ -92,4 +92,13 @@ public class AddCartItemServletTest {
 
         verify(response).sendRedirect("path" + "&errors=" + "Out of stock, available " + available + "&id=" + productId + "&quantity=" + quantity);
     }
+
+    @Test
+    public void givenInvalidPathInfo_whenDoPost_thenSend404Error() throws IOException, ServletException {
+        when(request.getPathInfo()).thenReturn("");
+
+        servlet.doPost(request, response);
+
+        verify(response).sendError(HttpServletResponse.SC_NOT_FOUND, "Page not found");
+    }
 }

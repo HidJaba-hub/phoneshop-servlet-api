@@ -1,5 +1,6 @@
 package com.es.phoneshop.DAO;
 
+import com.es.phoneshop.DAO.productDao.CustomProductDao;
 import com.es.phoneshop.SortField;
 import com.es.phoneshop.SortOrder;
 import com.es.phoneshop.model.entity.Product;

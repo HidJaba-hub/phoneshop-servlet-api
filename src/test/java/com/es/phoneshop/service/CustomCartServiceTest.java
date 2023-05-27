@@ -6,6 +6,7 @@ import com.es.phoneshop.model.entity.Product;
 import com.es.phoneshop.model.entity.cart.Cart;
 import com.es.phoneshop.model.entity.cart.CartItem;
 import com.es.phoneshop.service.cart.DefaultCartService;
+import com.es.phoneshop.service.product.ProductService;
 import com.es.phoneshop.utils.ReferenceTool;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;

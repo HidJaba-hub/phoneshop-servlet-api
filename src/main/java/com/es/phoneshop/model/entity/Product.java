@@ -12,8 +12,8 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@EqualsAndHashCode
-public class Product implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class Product extends GenericEntity implements Serializable {
 
     private Long id;
     private String code;
@@ -31,7 +31,7 @@ public class Product implements Serializable {
     private List<PriceHistory> priceHistory;
 
     public Product() {
-        this.id = UUID.randomUUID().getMostSignificantBits();
+        super();
     }
 
     public Product(String code, String description, BigDecimal price, Currency currency,

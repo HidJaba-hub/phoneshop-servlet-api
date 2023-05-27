@@ -6,7 +6,7 @@ import com.es.phoneshop.model.entity.cart.Cart;
 import com.es.phoneshop.service.cart.CartService;
 import com.es.phoneshop.service.cart.DefaultCartService;
 import com.es.phoneshop.utils.ReferenceTool;
-import com.es.phoneshop.validators.QuantityParseValidator;
+import com.es.phoneshop.validators.DefaultParseValidator;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -19,14 +19,14 @@ import java.util.Map;
 
 public abstract class CartItemServlet extends HttpServlet {
 
-    protected QuantityParseValidator quantityParseValidator;
-    private CartService cartService;
+    protected DefaultParseValidator defaultParseValidator;
+    protected CartService cartService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         cartService = DefaultCartService.getInstance();
-        quantityParseValidator = QuantityParseValidator.getInstance();
+        defaultParseValidator = DefaultParseValidator.getInstance();
     }
 
     protected void addProduct(HttpServletRequest request, long productId, int quantity, Map<Long, String> errors) throws IOException {

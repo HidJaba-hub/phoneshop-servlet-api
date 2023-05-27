@@ -1,7 +1,7 @@
-package com.es.phoneshop.service;
+package com.es.phoneshop.service.product;
 
-import com.es.phoneshop.DAO.CustomProductDao;
-import com.es.phoneshop.DAO.ProductDao;
+import com.es.phoneshop.DAO.productDao.CustomProductDao;
+import com.es.phoneshop.DAO.productDao.ProductDao;
 import com.es.phoneshop.SortField;
 import com.es.phoneshop.SortOrder;
 import com.es.phoneshop.exception.ProductNotFoundException;
