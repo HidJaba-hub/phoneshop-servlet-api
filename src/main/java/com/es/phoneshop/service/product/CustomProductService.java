@@ -44,7 +44,7 @@ public class CustomProductService implements ProductService {
     }
 
     @Override
-    public Product getProductById(Long id) {
+    public Product getProductById(Long id) throws ProductNotFoundException {
         Optional<Product> optionalProduct = productDao.getProductById(id);
         return optionalProduct.orElseThrow(() ->
                 new ProductNotFoundException(id, "Product not found for id: " + id));

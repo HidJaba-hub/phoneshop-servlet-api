@@ -152,6 +152,11 @@
     </error-page>
 
     <error-page>
+        <location>/WEB-INF/pages/errorTooManyRequests.jsp</location>
+        <error-code>429</error-code>
+    </error-page>
+
+    <error-page>
         <location>/WEB-INF/pages/error.jsp</location>
         <error-code>404</error-code>
     </error-page>

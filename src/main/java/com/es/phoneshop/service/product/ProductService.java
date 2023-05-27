@@ -2,13 +2,14 @@ package com.es.phoneshop.service.product;
 
 import com.es.phoneshop.SortField;
 import com.es.phoneshop.SortOrder;
+import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.entity.Product;
 
 import java.util.List;
 
 public interface ProductService {
 
-    Product getProductById(Long id);
+    Product getProductById(Long id) throws ProductNotFoundException;
 
     List<Product> getProducts();
 

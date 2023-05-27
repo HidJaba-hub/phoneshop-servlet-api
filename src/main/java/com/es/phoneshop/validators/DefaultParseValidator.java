@@ -20,7 +20,7 @@ public class DefaultParseValidator implements ParseValidator {
 
     @Override
     public void validateName(String stringToValidate, Map<String, String> errors, String parameter) {
-        if (!stringToValidate.matches("^[a-zA-Z][\\sa-zA-Z]*$")) {
+        if (!stringToValidate.matches("^\\D+$")) {
             errors.put(parameter, "Remove numbers, please");
         }
     }

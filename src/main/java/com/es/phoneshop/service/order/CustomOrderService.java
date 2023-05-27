@@ -13,7 +13,6 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class CustomOrderService implements OrderService {
@@ -47,7 +46,7 @@ public class CustomOrderService implements OrderService {
     }
 
     @Override
-    public Order getOrderById(String id) {
+    public Order getOrderById(String id) throws OrderNotFoundException {
         Optional<Order> optionalOrder = orderDao.getOrderBySecureId(id);
         return optionalOrder.orElseThrow(() ->
                 new OrderNotFoundException(id, "Order not found for id: " + id));
@@ -64,7 +63,6 @@ public class CustomOrderService implements OrderService {
 
     @Override
     public void placeOrder(Order order) {
-        order.setSecureId(UUID.randomUUID().toString());
         orderDao.save(order);
     }
 

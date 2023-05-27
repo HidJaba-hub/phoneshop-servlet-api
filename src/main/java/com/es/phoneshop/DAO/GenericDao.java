@@ -65,4 +65,12 @@ public class GenericDao<T extends GenericEntity> {
     public void setItems(List<T> items) {
         this.items = items;
     }
+
+    public Lock getReadLock() {
+        return readLock;
+    }
+
+    public Lock getWriteLock() {
+        return writeLock;
+    }
 }

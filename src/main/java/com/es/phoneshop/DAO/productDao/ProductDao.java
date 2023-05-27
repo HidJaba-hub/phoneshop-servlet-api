@@ -17,7 +17,7 @@ public interface ProductDao {
 
     List<Product> findProductsByQuery(String query);
 
-    void save(Product product);
+    void save(Product product) throws IllegalArgumentException;
 
     void delete(Long id);
 

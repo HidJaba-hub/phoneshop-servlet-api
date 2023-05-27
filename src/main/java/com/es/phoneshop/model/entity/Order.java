@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -28,5 +29,6 @@ public class Order extends Cart {
 
     public Order() {
         super();
+        secureId = UUID.randomUUID().toString();
     }
 }

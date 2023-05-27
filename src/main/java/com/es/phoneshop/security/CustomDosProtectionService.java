@@ -1,15 +1,18 @@
 package com.es.phoneshop.security;
 
+import lombok.Getter;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Getter
 public class CustomDosProtectionService implements DosProtectionService {
 
-    private static final long TIME_INTERVAL_MILLS = 60000;
+    private static final long TIME_INTERVAL_MILLS = 60_000;
     private static final long MAX_REQUEST_COUNT = 20;
 
-    private Map<String, Long> countMap = new ConcurrentHashMap<>();
-    private Map<String, Long> timeMap = new ConcurrentHashMap<>();
+    private final Map<String, Long> countMap = new ConcurrentHashMap<>();
+    private final Map<String, Long> timeMap = new ConcurrentHashMap<>();
 
     private CustomDosProtectionService() {
 
@@ -36,6 +39,18 @@ public class CustomDosProtectionService implements DosProtectionService {
         countMap.put(ip, requestCount + 1);
         timeMap.put(ip, System.currentTimeMillis());
         return true;
+    }
+
+    public Map<String, Long> getCountMap() {
+        return countMap;
+    }
+
+    public Map<String, Long> getTimeMap() {
+        return timeMap;
+    }
+
+    public long getMaxRequestCount() {
+        return MAX_REQUEST_COUNT;
     }
 
     private enum SingletonManager {

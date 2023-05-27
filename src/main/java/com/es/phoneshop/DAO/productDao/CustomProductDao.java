@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
@@ -20,7 +19,6 @@ public class CustomProductDao extends GenericDao<Product> implements ProductDao 
 
     private static CustomProductDao customProductDao;
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
-    private final Lock readLock = lock.readLock();
 
 
     private CustomProductDao() {
@@ -43,7 +41,7 @@ public class CustomProductDao extends GenericDao<Product> implements ProductDao 
 
     @Override
     public List<Product> findProducts() {
-        readLock.lock();
+        getReadLock().lock();
         try {
             return getItems().stream()
                     .filter(product -> product.getPrice() != null)
@@ -51,17 +49,17 @@ public class CustomProductDao extends GenericDao<Product> implements ProductDao 
                     .filter(product -> product.getStock() > 0)
                     .collect(Collectors.toList());
         } finally {
-            readLock.unlock();
+            getReadLock().unlock();
         }
     }
 
     public List<Product> findProductsByQuery(String query) {
-        readLock.lock();
+        getReadLock().lock();
         try {
             Comparator<Product> comparator = setQueryComparator(query);
             return getProductList(query, comparator);
         } finally {
-            readLock.unlock();
+            getReadLock().unlock();
         }
     }
 
@@ -78,13 +76,13 @@ public class CustomProductDao extends GenericDao<Product> implements ProductDao 
 
     @Override
     public List<Product> sortProductsByFieldAndQuery(SortField sortField, SortOrder sortOrder, String query) {
-        readLock.lock();
+        getReadLock().lock();
         try {
             Comparator<Product> comparator = setOrderComparator(sortOrder,
                     setFieldComparator(sortField, query));
             return getProductList(query, comparator);
         } finally {
-            readLock.unlock();
+            getReadLock().unlock();
         }
 
     }
@@ -115,7 +113,7 @@ public class CustomProductDao extends GenericDao<Product> implements ProductDao 
     }
 
     @Override
-    public void save(Product product) {
+    public void save(Product product) throws IllegalArgumentException {
         super.save(product);
     }
 

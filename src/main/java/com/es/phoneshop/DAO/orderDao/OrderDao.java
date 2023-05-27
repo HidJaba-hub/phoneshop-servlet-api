@@ -9,5 +9,5 @@ public interface OrderDao {
 
     Optional<Order> getOrderBySecureId(String id) throws OrderNotFoundException;
 
-    void save(Order order) throws OrderNotFoundException;
+    void save(Order order) throws IllegalArgumentException;
 }
