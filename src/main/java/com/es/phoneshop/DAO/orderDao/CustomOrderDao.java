@@ -34,9 +34,4 @@ public class CustomOrderDao extends GenericDao<Order> implements OrderDao {
             getReadLock().unlock();
         }
     }
-
-    @Override
-    public void save(Order order) throws IllegalArgumentException {
-        super.save(order);
-    }
 }

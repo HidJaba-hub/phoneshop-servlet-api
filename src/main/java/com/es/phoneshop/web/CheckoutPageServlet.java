@@ -33,7 +33,7 @@ public class CheckoutPageServlet extends CartItemServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Cart cart = cartService.getCart(request);
-        request.setAttribute("order", orderService.getOrder(cart));
+        request.setAttribute("order", orderService.createOrder(cart));
         request.setAttribute("paymentMethods", orderService.getPaymentMethods());
         request.getRequestDispatcher("/WEB-INF/pages/checkout.jsp").forward(request, response);
     }
@@ -41,7 +41,7 @@ public class CheckoutPageServlet extends CartItemServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         Cart cart = cartService.getCart(request);
-        Order order = orderService.getOrder(cart);
+        Order order = orderService.createOrder(cart);
         Map<String, String> errors = new HashMap<>();
 
         setRequiredParameter(request, "firstName", errors, order::setFirstName, ValidatorMethod.NAME);

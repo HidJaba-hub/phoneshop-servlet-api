@@ -53,7 +53,7 @@ public class CheckoutPageServletTest {
         MockitoAnnotations.initMocks(this);
 
         when(cartService.getCart(request)).thenReturn(cart);
-        when(orderService.getOrder(cart)).thenReturn(order);
+        when(orderService.createOrder(cart)).thenReturn(order);
         when(request.getSession()).thenReturn(session);
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
     }

@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface OrderService {
 
-    Order getOrder(Cart cart);
+    Order createOrder(Cart cart);
 
     Order getOrderById(String id) throws OrderNotFoundException;
 

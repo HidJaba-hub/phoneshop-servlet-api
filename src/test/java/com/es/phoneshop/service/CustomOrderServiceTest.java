@@ -39,7 +39,7 @@ public class CustomOrderServiceTest {
     public void givenCart_whenGetOrder_thenVerifyOrder() {
         when(cart.getTotalPrice()).thenReturn(new BigDecimal(1));
 
-        Order order = orderService.getOrder(cart);
+        Order order = orderService.createOrder(cart);
 
         assertEquals(order.getItems(), cart.getItems());
         assertEquals(order.getCurrency(), cart.getCurrency());

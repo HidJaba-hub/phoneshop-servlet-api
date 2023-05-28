@@ -28,7 +28,7 @@ public class CustomOrderService implements OrderService {
     }
 
     @Override
-    public Order getOrder(Cart cart) {
+    public Order createOrder(Cart cart) {
         Order order = new Order();
         order.setItems(cart.getItems().stream().map(item -> {
             try {

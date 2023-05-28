@@ -113,16 +113,6 @@ public class CustomProductDao extends GenericDao<Product> implements ProductDao 
     }
 
     @Override
-    public void save(Product product) throws IllegalArgumentException {
-        super.save(product);
-    }
-
-    @Override
-    public void delete(Long id) {
-        super.delete(id);
-    }
-
-    @Override
     public List<Product> getProducts() {
         return getItems();
     }

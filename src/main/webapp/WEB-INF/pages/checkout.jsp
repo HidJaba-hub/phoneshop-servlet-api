@@ -86,12 +86,12 @@
     <h2>Your details</h2>
     <table>
     <table>
-        <tags:orderFormRow name="firstName" label="First name" order="${order}" errors="${errors}" type="text"/>
-        <tags:orderFormRow name="lastName" label="Last name" order="${order}" errors="${errors}" type="text"/>
-        <tags:orderFormRow name="phone" label="Phone" order="${order}" errors="${errors}" type="text"/>
-        <tags:orderFormRow name="deliveryDate" label="Delivery date" order="${order}" errors="${errors}" type="date"/>
+        <tags:orderFormRow name="firstName" label="First name" order="${order}" errors="${errors}" type="text" defaultValue="Ваше имя"/>
+        <tags:orderFormRow name="lastName" label="Last name" order="${order}" errors="${errors}" type="text" defaultValue="Ваша фамилия"/>
+        <tags:orderFormRow name="phone" label="Phone" order="${order}" errors="${errors}" type="text" defaultValue="+375(xx)xxxxxxx"/>
+        <tags:orderFormRow name="deliveryDate" label="Delivery date" order="${order}" errors="${errors}" type="date" defaultValue=""/>
         <tags:orderFormRow name="deliveryAddress" label="Delivery address" order="${order}" errors="${errors}"
-                           type="text"/>
+                           type="text" defaultValue="г. Город ул.Ваша улица, дом"/>
         <tr>
             <td>Payment method <span style="color: red">*</span></td>
             <td>
