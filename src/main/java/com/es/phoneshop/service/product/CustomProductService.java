@@ -60,5 +60,9 @@ public class CustomProductService implements ProductService {
         productDao.save(product);
     }
 
-
+    @Override
+    public void recalculateProductStock(Product product, int quantity) {
+        product.setStock(product.getStock() - quantity);
+        productDao.save(product);
+    }
 }

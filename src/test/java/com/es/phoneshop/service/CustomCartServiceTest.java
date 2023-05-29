@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.util.LinkedHashSet;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
@@ -154,5 +155,12 @@ public class CustomCartServiceTest {
         defaultCartService.deleteCartItem(cart, productId);
 
         verify(cart, atLeast(3)).getItems();
+    }
+
+    @Test
+    public void givenCart_whenCleanCart_thenVerifyClean() {
+        defaultCartService.cleanCart(cart);
+
+        assertTrue(cart.getItems().isEmpty());
     }
 }

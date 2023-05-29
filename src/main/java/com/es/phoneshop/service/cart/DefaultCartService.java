@@ -91,6 +91,9 @@ public class DefaultCartService implements CartService {
     public void cleanCart(Cart cart) {
         Object syncObject = SyncObjectPool.getSyncObject(cart.getId().toString());
         synchronized (syncObject) {
+            cart.getItems().forEach(cartItem ->
+                    productService.recalculateProductStock(cartItem.getProduct(), cartItem.getQuantity())
+            );
             cart.getItems().clear();
             recalculateCart(cart);
         }
