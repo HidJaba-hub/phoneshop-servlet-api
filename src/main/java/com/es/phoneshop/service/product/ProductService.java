@@ -20,4 +20,6 @@ public interface ProductService {
     void deleteProduct(Long id);
 
     void saveProduct(Product product);
+
+    void recalculateProductStock(Product product, int quantity);
 }

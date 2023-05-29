@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CustomDosProtectionService implements DosProtectionService {
 
     private static final long TIME_INTERVAL_MILLS = 60_000;
-    private static final long MAX_REQUEST_COUNT = 20;
+    private static final long MAX_REQUEST_COUNT = 100;
 
     private final Map<String, Long> countMap = new ConcurrentHashMap<>();
     private final Map<String, Long> timeMap = new ConcurrentHashMap<>();

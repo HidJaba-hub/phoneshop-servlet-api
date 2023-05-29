@@ -36,7 +36,9 @@
             </tr>
             <tr>
                 <td>Stock</td>
-                <td>${product.stock}</td>
+                <td>
+                        ${product.stock > 0 ? product.stock : "Product is out of stock"}
+                </td>
             </tr>
             <tr>
                 <td>Price</td>
