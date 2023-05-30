@@ -1,4 +1,4 @@
-package com.es.phoneshop.DAO;
+package com.es.phoneshop.DAO.productDao;
 
 import com.es.phoneshop.SortField;
 import com.es.phoneshop.SortOrder;
@@ -17,7 +17,7 @@ public interface ProductDao {
 
     List<Product> findProductsByQuery(String query);
 
-    void save(Product product);
+    void save(Product product) throws IllegalArgumentException;
 
     void delete(Long id);
 

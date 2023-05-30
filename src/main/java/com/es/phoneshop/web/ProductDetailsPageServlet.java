@@ -1,8 +1,8 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.entity.RecentlyViewedProducts;
-import com.es.phoneshop.service.CustomProductService;
-import com.es.phoneshop.service.ProductService;
+import com.es.phoneshop.service.product.CustomProductService;
+import com.es.phoneshop.service.product.ProductService;
 import com.es.phoneshop.service.productHistory.CustomRecentlyViewedProductsService;
 import com.es.phoneshop.service.productHistory.RecentlyViewedProductsService;
 import com.es.phoneshop.web.cart.CartItemServlet;
@@ -52,7 +52,7 @@ public class ProductDetailsPageServlet extends CartItemServlet {
 
             int quantity;
             try {
-                quantityParseValidator.validate(quantityStr, errors, productId);
+                defaultParseValidator.validateQuantity(quantityStr, errors, productId);
                 if (errors.isEmpty()) {
                     quantity = parseQuantity(quantityStr, request);
                 } else {

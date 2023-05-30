@@ -1,7 +1,7 @@
-package com.es.phoneshop.service;
+package com.es.phoneshop.service.product;
 
-import com.es.phoneshop.DAO.CustomProductDao;
-import com.es.phoneshop.DAO.ProductDao;
+import com.es.phoneshop.DAO.productDao.CustomProductDao;
+import com.es.phoneshop.DAO.productDao.ProductDao;
 import com.es.phoneshop.SortField;
 import com.es.phoneshop.SortOrder;
 import com.es.phoneshop.exception.ProductNotFoundException;
@@ -44,7 +44,7 @@ public class CustomProductService implements ProductService {
     }
 
     @Override
-    public Product getProductById(Long id) {
+    public Product getProductById(Long id) throws ProductNotFoundException {
         Optional<Product> optionalProduct = productDao.getProductById(id);
         return optionalProduct.orElseThrow(() ->
                 new ProductNotFoundException(id, "Product not found for id: " + id));
@@ -60,5 +60,9 @@ public class CustomProductService implements ProductService {
         productDao.save(product);
     }
 
-
+    @Override
+    public void recalculateProductStock(Product product, int quantity) {
+        product.setStock(product.getStock() - quantity);
+        productDao.save(product);
+    }
 }

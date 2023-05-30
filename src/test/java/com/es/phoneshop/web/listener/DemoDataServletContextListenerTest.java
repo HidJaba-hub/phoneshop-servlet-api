@@ -1,6 +1,6 @@
 package com.es.phoneshop.web.listener;
 
-import com.es.phoneshop.service.CustomProductService;
+import com.es.phoneshop.service.product.CustomProductService;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import org.junit.Before;

@@ -2,8 +2,8 @@ package com.es.phoneshop.web.listener;
 
 import com.es.phoneshop.model.entity.PriceHistory;
 import com.es.phoneshop.model.entity.Product;
-import com.es.phoneshop.service.CustomProductService;
-import com.es.phoneshop.service.ProductService;
+import com.es.phoneshop.service.product.CustomProductService;
+import com.es.phoneshop.service.product.ProductService;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 

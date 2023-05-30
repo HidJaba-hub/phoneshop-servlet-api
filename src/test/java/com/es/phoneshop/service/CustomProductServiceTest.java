@@ -1,10 +1,11 @@
 package com.es.phoneshop.service;
 
-import com.es.phoneshop.DAO.ProductDao;
+import com.es.phoneshop.DAO.productDao.ProductDao;
 import com.es.phoneshop.SortField;
 import com.es.phoneshop.SortOrder;
 import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.entity.Product;
+import com.es.phoneshop.service.product.CustomProductService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -95,4 +97,17 @@ public class CustomProductServiceTest {
         verify(productDao).save(productToSave);
     }
 
+    @Test
+    public void givenProduct_whenRecalculate_thenVerifyRecalculate() {
+        int originalStock = 100;
+        int quantity = 1;
+        int expectedStock = originalStock - quantity;
+        Product product = new Product();
+        product.setStock(originalStock);
+
+        productService.recalculateProductStock(product, quantity);
+
+        assertEquals(expectedStock, product.getStock());
+        verify(productDao).save(product);
+    }
 }
