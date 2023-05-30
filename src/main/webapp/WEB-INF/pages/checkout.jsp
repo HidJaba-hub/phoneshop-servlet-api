@@ -91,7 +91,7 @@
         <tags:orderFormRow name="phone" label="Phone" order="${order}" errors="${errors}" type="text" defaultValue="+375(xx)xxxxxxx"/>
         <tags:orderFormRow name="deliveryDate" label="Delivery date" order="${order}" errors="${errors}" type="date" defaultValue=""/>
         <tags:orderFormRow name="deliveryAddress" label="Delivery address" order="${order}" errors="${errors}"
-                           type="text" defaultValue="г. Город ул.Ваша улица, дом"/>
+                           type="text" defaultValue=""/>
         <tr>
             <td>Payment method <span style="color: red">*</span></td>
             <td>
