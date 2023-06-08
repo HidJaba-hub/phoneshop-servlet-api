@@ -1,8 +1,9 @@
 package com.es.phoneshop.service;
 
 import com.es.phoneshop.DAO.productDao.ProductDao;
-import com.es.phoneshop.SortField;
-import com.es.phoneshop.SortOrder;
+import com.es.phoneshop.enums.SearchCriteria;
+import com.es.phoneshop.enums.SortField;
+import com.es.phoneshop.enums.SortOrder;
 import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.entity.Product;
 import com.es.phoneshop.service.product.CustomProductService;
@@ -12,12 +13,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -109,5 +110,29 @@ public class CustomProductServiceTest {
 
         assertEquals(expectedStock, product.getStock());
         verify(productDao).save(product);
+    }
+
+    @Test
+    public void givenAnyDescription_whenFindProductsByQuery_thenGetProducts() {
+        String description = "test";
+        List<Product> expectedList = new ArrayList<>();
+        expectedList.add(new Product());
+        when(productDao.findProductsByQuery(description)).thenReturn(expectedList);
+
+        productService.getProductsByQuery(description, BigDecimal.ZERO, BigDecimal.TEN, SearchCriteria.ANY_WORDS);
+
+        verify(productDao).findProductsInPriceRange(expectedList, BigDecimal.ZERO, BigDecimal.TEN);
+    }
+
+    @Test
+    public void givenAllDescription_whenFindProductsByQuery_thenGetProducts() {
+        String description = "test";
+        List<Product> expectedList = new ArrayList<>();
+        expectedList.add(new Product());
+        when(productDao.findProductsByQueryAllMatch(description)).thenReturn(expectedList);
+
+        productService.getProductsByQuery(description, BigDecimal.ZERO, BigDecimal.TEN, SearchCriteria.ALL_WORDS);
+
+        verify(productDao).findProductsInPriceRange(expectedList, BigDecimal.ZERO, BigDecimal.TEN);
     }
 }

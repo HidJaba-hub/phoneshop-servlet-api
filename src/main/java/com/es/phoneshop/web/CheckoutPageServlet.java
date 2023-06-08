@@ -1,6 +1,6 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.PaymentMethod;
+import com.es.phoneshop.enums.PaymentMethod;
 import com.es.phoneshop.model.entity.Order;
 import com.es.phoneshop.model.entity.cart.Cart;
 import com.es.phoneshop.service.order.CustomOrderService;

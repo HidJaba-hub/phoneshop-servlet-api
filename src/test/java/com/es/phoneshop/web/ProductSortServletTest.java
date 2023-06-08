@@ -1,7 +1,7 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.SortField;
-import com.es.phoneshop.SortOrder;
+import com.es.phoneshop.enums.SortField;
+import com.es.phoneshop.enums.SortOrder;
 import com.es.phoneshop.service.product.ProductService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;

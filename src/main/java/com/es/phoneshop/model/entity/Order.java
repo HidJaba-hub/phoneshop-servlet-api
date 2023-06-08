@@ -1,6 +1,6 @@
 package com.es.phoneshop.model.entity;
 
-import com.es.phoneshop.PaymentMethod;
+import com.es.phoneshop.enums.PaymentMethod;
 import com.es.phoneshop.model.entity.cart.Cart;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

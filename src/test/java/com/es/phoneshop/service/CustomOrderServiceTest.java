@@ -1,7 +1,7 @@
 package com.es.phoneshop.service;
 
 import com.es.phoneshop.DAO.orderDao.CustomOrderDao;
-import com.es.phoneshop.PaymentMethod;
+import com.es.phoneshop.enums.PaymentMethod;
 import com.es.phoneshop.exception.OrderNotFoundException;
 import com.es.phoneshop.model.entity.Order;
 import com.es.phoneshop.model.entity.cart.Cart;

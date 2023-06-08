@@ -86,10 +86,14 @@
     <h2>Your details</h2>
     <table>
     <table>
-        <tags:orderFormRow name="firstName" label="First name" order="${order}" errors="${errors}" type="text" defaultValue=""/>
-        <tags:orderFormRow name="lastName" label="Last name" order="${order}" errors="${errors}" type="text" defaultValue=""/>
-        <tags:orderFormRow name="phone" label="Phone" order="${order}" errors="${errors}" type="text" defaultValue="+375(xx)xxxxxxx"/>
-        <tags:orderFormRow name="deliveryDate" label="Delivery date" order="${order}" errors="${errors}" type="date" defaultValue=""/>
+        <tags:orderFormRow name="firstName" label="First name" order="${order}" errors="${errors}" type="text"
+                           defaultValue=""/>
+        <tags:orderFormRow name="lastName" label="Last name" order="${order}" errors="${errors}" type="text"
+                           defaultValue=""/>
+        <tags:orderFormRow name="phone" label="Phone" order="${order}" errors="${errors}" type="text"
+                           defaultValue="+375(xx)xxxxxxx"/>
+        <tags:orderFormRow name="deliveryDate" label="Delivery date" order="${order}" errors="${errors}" type="date"
+                           defaultValue=""/>
         <tags:orderFormRow name="deliveryAddress" label="Delivery address" order="${order}" errors="${errors}"
                            type="text" defaultValue=""/>
         <tr>

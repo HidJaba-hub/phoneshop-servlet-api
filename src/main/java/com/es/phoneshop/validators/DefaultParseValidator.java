@@ -39,6 +39,16 @@ public class DefaultParseValidator implements ParseValidator {
         }
     }
 
+    @Override
+    public void validatePrice(String priceStr, Map<String, String> errors, String parameter) {
+        if (!priceStr.matches("^\\d+$")) {
+            errors.put(parameter, "Not a number");
+        }
+        if (priceStr.matches("^-\\d+$")) {
+            errors.put(parameter, "Price can't be negative");
+        }
+    }
+
     private enum SingletonManager {
 
         INSTANCE;
