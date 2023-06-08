@@ -21,4 +21,18 @@ public class StringChecker {
                 .count();
         return wordsCount / sourceString.length();
     }
+
+    public static boolean calculateStringIdentity(String sourceString, String criteriaString) {
+        if (StringUtils.isEmpty(sourceString)) {
+            return false;
+        }
+
+        Set<String> criteriaWords = Arrays.stream(criteriaString.toLowerCase().split("\\s+"))
+                .collect(Collectors.toSet());
+
+        double wordsCount = Arrays.stream(sourceString.toLowerCase().split("\\s+"))
+                .filter(criteriaWords::contains)
+                .count();
+        return wordsCount == criteriaWords.size();
+    }
 }

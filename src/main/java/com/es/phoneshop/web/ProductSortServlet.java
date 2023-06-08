@@ -1,7 +1,7 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.SortField;
-import com.es.phoneshop.SortOrder;
+import com.es.phoneshop.enums.SortField;
+import com.es.phoneshop.enums.SortOrder;
 import com.es.phoneshop.model.entity.Product;
 import com.es.phoneshop.service.product.CustomProductService;
 import com.es.phoneshop.service.product.ProductService;

@@ -1,10 +1,12 @@
 package com.es.phoneshop.service.product;
 
-import com.es.phoneshop.SortField;
-import com.es.phoneshop.SortOrder;
+import com.es.phoneshop.enums.SearchCriteria;
+import com.es.phoneshop.enums.SortField;
+import com.es.phoneshop.enums.SortOrder;
 import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.entity.Product;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ProductService {
@@ -22,4 +24,6 @@ public interface ProductService {
     void saveProduct(Product product);
 
     void recalculateProductStock(Product product, int quantity);
+
+    List<Product> getProductsByQuery(String description, BigDecimal minPrice, BigDecimal maxPrice, SearchCriteria searchCriteria);
 }

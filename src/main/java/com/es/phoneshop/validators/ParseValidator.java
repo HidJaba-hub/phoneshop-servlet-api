@@ -11,4 +11,6 @@ public interface ParseValidator {
     void validateNumber(String stringToValidate, Map<String, String> errors, String parameter);
 
     void validateDate(String stringToValidate, Map<String, String> errors, String parameter);
+
+    void validatePrice(String priceStr, Map<String, String> errors, String parameter);
 }

@@ -1,8 +1,8 @@
 package com.es.phoneshop.DAO;
 
 import com.es.phoneshop.DAO.productDao.CustomProductDao;
-import com.es.phoneshop.SortField;
-import com.es.phoneshop.SortOrder;
+import com.es.phoneshop.enums.SortField;
+import com.es.phoneshop.enums.SortOrder;
 import com.es.phoneshop.model.entity.Product;
 import org.junit.Before;
 import org.junit.Test;
@@ -131,4 +131,24 @@ public class CustomProductDaoTest {
         assertTrue(products.contains(productToSave));
     }
 
+    @Test
+    public void givenProductWithDescription_whenFindProductsByQueryAllMAtch_thenGetProduct() {
+        when(mockedProduct.getDescription()).thenReturn("testing");
+
+        List<Product> products = productDao.findProductsByQueryAllMatch("testing");
+
+        assertFalse(products.isEmpty());
+        assertTrue(products.contains(mockedProduct));
+        assertFalse(products.contains(anotherMockedProduct));
+    }
+
+    @Test
+    public void givenProducts_whenFindInPriceRange_thenGetProducts() {
+        List<Product> products = productDao.findProductsByQueryAllMatch("");
+        products = productDao.findProductsInPriceRange(products, BigDecimal.ZERO, new BigDecimal(Double.MAX_VALUE));
+
+        assertFalse(products.isEmpty());
+        assertTrue(products.contains(mockedProduct));
+        assertTrue(products.contains(anotherMockedProduct));
+    }
 }
